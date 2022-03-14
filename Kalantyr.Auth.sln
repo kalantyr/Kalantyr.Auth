@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32106.194
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kalantyr.Auth", "Kalantyr.Auth\Kalantyr.Auth.csproj", "{7FB188A7-FA45-4B11-A03D-525851ECE843}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kalantyr.Auth.Tests", "Kalantyr.Auth.Tests\Kalantyr.Auth.Tests.csproj", "{FD609077-89DB-40B2-A781-03BCF2673BE0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7FB188A7-FA45-4B11-A03D-525851ECE843}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FB188A7-FA45-4B11-A03D-525851ECE843}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FB188A7-FA45-4B11-A03D-525851ECE843}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FB188A7-FA45-4B11-A03D-525851ECE843}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD609077-89DB-40B2-A781-03BCF2673BE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD609077-89DB-40B2-A781-03BCF2673BE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD609077-89DB-40B2-A781-03BCF2673BE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD609077-89DB-40B2-A781-03BCF2673BE0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F6D6B1D7-686A-449E-89B7-68E83DCD041F}
+	EndGlobalSection
+EndGlobal
