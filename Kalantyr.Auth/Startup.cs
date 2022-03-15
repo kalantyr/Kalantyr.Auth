@@ -26,9 +26,11 @@ namespace Kalantyr.Auth
 
             services.AddSingleton<IUserStorage>(new UserStorage());
             services.AddSingleton<IHashCalculator>(new HashCalculator());
+            services.AddSingleton<ITokenStorage>(sp => new TokenStorage(sp.GetService<IOptions<AuthServiceConfig>>()));
             services.AddSingleton<IAuthService>(sp => new AuthService(
                 sp.GetService<IUserStorage>(),
                 sp.GetService<IHashCalculator>(),
+                sp.GetService<ITokenStorage>(),
                 sp.GetService<IOptions<AuthServiceConfig>>()));
 
             services.AddControllers();

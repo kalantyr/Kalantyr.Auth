@@ -15,13 +15,15 @@ namespace Kalantyr.Auth.Services.Impl
             {
                 Id = 1,
                 Login = "user1",
-                PasswordHash = "???"
+                PasswordHash = HashCalculator.GetHashImpl("qwerty1", "11111"),
+                Salt = "11111"
             },
             new UserRecord
             {
                 Id = 2,
                 Login = "user2",
-                PasswordHash = "???"
+                PasswordHash = HashCalculator.GetHashImpl("qwerty2", "22222"),
+                Salt = "22222"
             },
         };
 
