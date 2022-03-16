@@ -54,6 +54,15 @@ namespace Kalantyr.Auth.Services.Impl
             return Task.CompletedTask;
         }
 
+        public Task<uint?> GetUserIdByTokenAsync(string token, CancellationToken cancellationToken)
+        {
+            foreach (var pair in Tokens)
+                if (pair.Value.Value.Equals(token, StringComparison.InvariantCultureIgnoreCase))
+                    return Task.FromResult<uint?>(pair.Key);
+
+            return Task.FromResult(default(uint?));
+        }
+
         public Task<TokenInfo> GetByTokenAsync(string token, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(token)) throw new ArgumentNullException(nameof(token));

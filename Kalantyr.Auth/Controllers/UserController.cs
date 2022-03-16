@@ -8,21 +8,21 @@ using Microsoft.AspNetCore.Mvc;
 namespace Kalantyr.Auth.Controllers
 {
     [ApiController]
-    [Route("logout")]
-    public class LogoutController : ControllerBase
+    [Route("user")]
+    public class UserController : ControllerBase
     {
         private readonly IAuthService _authService;
 
-        public LogoutController(IAuthService authService)
+        public UserController(IAuthService authService)
         {
             _authService = authService ?? throw new ArgumentNullException(nameof(authService));
         }
 
-        [HttpPost]
-        [Route("")]
-        public async Task<IActionResult> LogoutAsync(CancellationToken cancellationToken)
+        [HttpGet]
+        [Route("id")]
+        public async Task<IActionResult> GetUserIdAsync(CancellationToken cancellationToken)
         {
-            var result = await _authService.LogoutAsync(Request.GetAuthToken(), cancellationToken);
+            var result = await _authService.GetUserIdAsync(Request.GetAuthToken(), Request.GetAppKey(), cancellationToken);
             return Ok(result);
         }
     }

@@ -26,5 +26,12 @@
             Code = nameof(TokenNotFound),
             Message = "Token was not found"
         };
+
+        public static Error WrongAppKey { get; } = new Error
+        {
+            Code = nameof(WrongAppKey),
+            Message = "Incorrect application key"
+        };
+
     }
 }

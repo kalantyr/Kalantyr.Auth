@@ -100,5 +100,31 @@ namespace Kalantyr.Auth.Tests
             Assert.IsTrue(result.Result);
             Assert.IsNull(result.Error);
         }
+
+        [Test]
+        public async Task GetUserId_Test()
+        {
+            _config
+                .Setup(c => c.Value)
+                .Returns(new AuthServiceConfig
+                {
+                    AppKeys = new [] { new AuthServiceConfig.AppKeyConfig { Key = "app-123" } }
+                });
+
+            _tokenStorage
+                .Setup(ts => ts.GetUserIdByTokenAsync("777", It.IsAny<CancellationToken>()))
+                .ReturnsAsync(777u);
+
+            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object);
+
+            var result = await authService.GetUserIdAsync("fgjkgjkb", "app-666", CancellationToken.None);
+            Assert.AreEqual(Errors.WrongAppKey.Code, result.Error.Code);
+
+            result = await authService.GetUserIdAsync("666", "app-123", CancellationToken.None);
+            Assert.AreEqual(Errors.TokenNotFound.Code, result.Error.Code);
+
+            result = await authService.GetUserIdAsync("777", "app-123", CancellationToken.None);
+            Assert.AreEqual(777, result.Result);
+        }
     }
 }

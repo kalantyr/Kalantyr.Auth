@@ -15,5 +15,7 @@ namespace Kalantyr.Auth.Services
         Task RemoveByUserIdAsync(uint userId, CancellationToken cancellationToken);
 
         Task RemoveByTokenAsync(string token, CancellationToken cancellationToken);
+
+        Task<uint?> GetUserIdByTokenAsync(string token, CancellationToken cancellationToken);
     }
 }

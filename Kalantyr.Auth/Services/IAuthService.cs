@@ -9,5 +9,7 @@ namespace Kalantyr.Auth.Services
         Task<ResultDto<TokenInfo>> LoginAsync(LoginPasswordDto dto, CancellationToken cancellationToken);
         
         Task<ResultDto<bool>> LogoutAsync(string token, CancellationToken cancellationToken);
+
+        Task<ResultDto<uint>> GetUserIdAsync(string userToken, string appKey, CancellationToken cancellationToken);
     }
 }
