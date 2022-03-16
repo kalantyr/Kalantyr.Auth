@@ -7,5 +7,7 @@ namespace Kalantyr.Auth.Services
     public interface IAuthService
     {
         Task<ResultDto<TokenInfo>> LoginAsync(LoginPasswordDto dto, CancellationToken cancellationToken);
+        
+        Task<ResultDto<bool>> LogoutAsync(string token, CancellationToken cancellationToken);
     }
 }

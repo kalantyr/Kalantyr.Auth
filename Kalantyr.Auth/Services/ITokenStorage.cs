@@ -8,8 +8,12 @@ namespace Kalantyr.Auth.Services
     {
         Task AddAsync(uint userId, TokenInfo tokenInfo, CancellationToken cancellationToken);
         
-        Task<TokenInfo> GetAsync(uint userId, CancellationToken cancellationToken);
-        
-        Task RemoveAsync(uint userId, CancellationToken cancellationToken);
+        Task<TokenInfo> GetByUserIdAsync(uint userId, CancellationToken cancellationToken);
+
+        Task<TokenInfo> GetByTokenAsync(string token, CancellationToken cancellationToken);
+
+        Task RemoveByUserIdAsync(uint userId, CancellationToken cancellationToken);
+
+        Task RemoveByTokenAsync(string token, CancellationToken cancellationToken);
     }
 }

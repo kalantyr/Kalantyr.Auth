@@ -1,10 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Kalantyr.Auth.Models;
-using Kalantyr.Auth.Models.Config;
 using Kalantyr.Auth.Services.Impl;
-using Microsoft.Extensions.Options;
-using Moq;
 using NUnit.Framework;
 
 namespace Kalantyr.Auth.Tests
@@ -14,15 +11,28 @@ namespace Kalantyr.Auth.Tests
         [Test]
         public async Task Add_Remove_Get_Test()
         {
-            var tokenStorage = new TokenStorage(new Mock<IOptions<AuthServiceConfig>>().Object);
-            var tokenInfo = new TokenInfo();
-            
-            await tokenStorage.AddAsync(123, tokenInfo, CancellationToken.None);
-            var result = await tokenStorage.GetAsync(123, CancellationToken.None);
+            const int userId = 123;
+
+            var tokenStorage = new TokenStorage();
+            var tokenInfo = new TokenInfo
+            {
+                Value = "1234567890"
+            };
+
+            await tokenStorage.AddAsync(userId, tokenInfo, CancellationToken.None);
+            var result = await tokenStorage.GetByUserIdAsync(userId, CancellationToken.None);
             Assert.AreSame(tokenInfo, result);
-            
-            await tokenStorage.RemoveAsync(123, CancellationToken.None);
-            result = await tokenStorage.GetAsync(123, CancellationToken.None);
+
+            await tokenStorage.RemoveByUserIdAsync(userId, CancellationToken.None);
+            result = await tokenStorage.GetByUserIdAsync(userId, CancellationToken.None);
+            Assert.IsNull(result);
+
+            await tokenStorage.AddAsync(userId, tokenInfo, CancellationToken.None);
+            result = await tokenStorage.GetByUserIdAsync(userId, CancellationToken.None);
+            Assert.AreSame(tokenInfo, result);
+
+            await tokenStorage.RemoveByTokenAsync(tokenInfo.Value, CancellationToken.None);
+            result = await tokenStorage.GetByUserIdAsync(userId, CancellationToken.None);
             Assert.IsNull(result);
         }
     }

@@ -23,10 +23,6 @@ namespace Kalantyr.Auth.Tests
             _config
                 .Setup(c => c.Value)
                 .Returns(new AuthServiceConfig());
-
-            _hashCalculator
-                .Setup(hc => hc.GetHash(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns("12345");
         }
 
         [Test]
@@ -63,6 +59,10 @@ namespace Kalantyr.Auth.Tests
         [Test]
         public async Task Login_Test()
         {
+            _hashCalculator
+                .Setup(hc => hc.GetHash(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns("12345");
+
             var userRecord = new UserRecord { Id = 123, Login = "user123", PasswordHash = "12345" };
             _userStorage
                 .Setup(us => us.GetUserByLoginAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
@@ -73,7 +73,7 @@ namespace Kalantyr.Auth.Tests
                 ExpirationDate = DateTimeOffset.Now.AddHours(1)
             };
             _tokenStorage
-                .Setup(ts => ts.GetAsync(It.IsAny<uint>(), It.IsAny<CancellationToken>()))
+                .Setup(ts => ts.GetByUserIdAsync(It.IsAny<uint>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(tokenInfo);
 
             var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object);
@@ -82,6 +82,23 @@ namespace Kalantyr.Auth.Tests
             var result2 = await authService.LoginAsync(data, CancellationToken.None);
             Assert.AreEqual(result1.Result.Value, result2.Result.Value);
             Assert.AreEqual(result1.Result.ExpirationDate, result2.Result.ExpirationDate);
+        }
+
+        [Test]
+        public async Task Logout_WithoutToken_Test()
+        {
+            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object);
+            var result = await authService.LogoutAsync(" ", CancellationToken.None);
+            Assert.AreEqual(Errors.TokenNotFound.Code, result.Error.Code);
+        }
+
+        [Test]
+        public async Task Logout_Test()
+        {
+            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object);
+            var result = await authService.LogoutAsync("fgjkgjkb", CancellationToken.None);
+            Assert.IsTrue(result.Result);
+            Assert.IsNull(result.Error);
         }
     }
 }

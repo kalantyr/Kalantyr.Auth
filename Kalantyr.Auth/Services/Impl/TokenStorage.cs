@@ -1,41 +1,66 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Kalantyr.Auth.Models;
-using Kalantyr.Auth.Models.Config;
-using Microsoft.Extensions.Options;
 
 namespace Kalantyr.Auth.Services.Impl
 {
     public class TokenStorage : ITokenStorage
     {
         private static readonly IDictionary<uint, TokenInfo> Tokens = new ConcurrentDictionary<uint, TokenInfo>();
-        private readonly AuthServiceConfig _config;
 
-        public TokenStorage(IOptions<AuthServiceConfig> config)
-        {
-            _config = config.Value;
-        }
-
-        public async Task AddAsync(uint userId, TokenInfo tokenInfo, CancellationToken cancellationToken)
+        public Task AddAsync(uint userId, TokenInfo tokenInfo, CancellationToken cancellationToken)
         {
             if (tokenInfo == null) throw new ArgumentNullException(nameof(tokenInfo));
 
             Tokens.Add(userId, tokenInfo);
+
+            return Task.CompletedTask;
         }
 
-        public async Task<TokenInfo> GetAsync(uint userId, CancellationToken cancellationToken)
+        public Task<TokenInfo> GetByUserIdAsync(uint userId, CancellationToken cancellationToken)
         {
             if (Tokens.TryGetValue(userId, out var tokenInfo))
-                return tokenInfo;
-            return null;
+                return Task.FromResult(tokenInfo);
+            return Task.FromResult(default(TokenInfo));
         }
 
-        public async Task RemoveAsync(uint userId, CancellationToken cancellationToken)
+        public Task RemoveByUserIdAsync(uint userId, CancellationToken cancellationToken)
         {
-            Tokens.Remove(userId);
+            if (Tokens.ContainsKey(userId))
+                Tokens.Remove(userId);
+
+            return Task.CompletedTask;
+        }
+
+        public Task RemoveByTokenAsync(string token, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(token)) throw new ArgumentNullException(nameof(token));
+
+            var userId = default(uint?);
+            foreach (var pair in Tokens)
+                if (pair.Value.Value.Equals(token, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    userId = pair.Key;
+                    break;
+                }
+
+            if (userId != null)
+                Tokens.Remove(userId.Value);
+
+            return Task.CompletedTask;
+        }
+
+        public Task<TokenInfo> GetByTokenAsync(string token, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(token)) throw new ArgumentNullException(nameof(token));
+
+            var result = Tokens.Values
+                .FirstOrDefault(tokenInfo => tokenInfo.Value.Equals(token, StringComparison.InvariantCultureIgnoreCase));
+            return Task.FromResult(result);
         }
     }
 }

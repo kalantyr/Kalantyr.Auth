@@ -20,5 +20,11 @@
             Code = nameof(LoginNotFound),
             Message = "This login was not found"
         };
+
+        public static Error TokenNotFound { get; } = new Error
+        {
+            Code = nameof(TokenNotFound),
+            Message = "Token was not found"
+        };
     }
 }

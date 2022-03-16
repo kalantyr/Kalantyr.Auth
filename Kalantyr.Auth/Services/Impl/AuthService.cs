@@ -11,6 +11,7 @@ namespace Kalantyr.Auth.Services.Impl
     {
         private static readonly ResultDto<TokenInfo> LoginNotFound = new ResultDto<TokenInfo> { Error = Errors.LoginNotFound };
         private static readonly ResultDto<TokenInfo> WrongPassword = new ResultDto<TokenInfo> { Error = Errors.WrongPassword };
+        private static readonly ResultDto<bool> TokenNotFound = new ResultDto<bool> { Error = Errors.TokenNotFound };
 
         private readonly IUserStorageReadonly _userStorage;
         private readonly IHashCalculator _hashCalculator;
@@ -41,13 +42,13 @@ namespace Kalantyr.Auth.Services.Impl
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            var existingToken = await _tokenStorage.GetAsync(userRecord.Id, cancellationToken);
+            var existingToken = await _tokenStorage.GetByUserIdAsync(userRecord.Id, cancellationToken);
             if (existingToken != null)
             {
                 if (existingToken.ExpirationDate > DateTimeOffset.Now.Add(_config.TokenLifetime / 2))
                     return new ResultDto<TokenInfo> { Result = existingToken };
 
-                await _tokenStorage.RemoveAsync(userRecord.Id, cancellationToken);
+                await _tokenStorage.RemoveByUserIdAsync(userRecord.Id, cancellationToken);
             }
 
             var tokenInfo = new TokenInfo
@@ -57,6 +58,18 @@ namespace Kalantyr.Auth.Services.Impl
             };
             await _tokenStorage.AddAsync(userRecord.Id, tokenInfo, cancellationToken);
             return new ResultDto<TokenInfo> { Result = tokenInfo };
+        }
+
+        public async Task<ResultDto<bool>> LogoutAsync(string token, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(token))
+                return TokenNotFound;
+
+            var tokenInfo = await _tokenStorage.GetByTokenAsync(token, cancellationToken);
+            if (tokenInfo != null)
+                await _tokenStorage.RemoveByTokenAsync(token, cancellationToken);
+
+            return ResultDto<bool>.Ok;
         }
 
         private static string GenerateToken()

@@ -1,4 +1,7 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=10a8d18f_002D0214_002D452d_002D8bdf_002De7d56d0b21b5/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="AuthService_Tests #5" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Solution /&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=1e64f736_002D3ffe_002D4a80_002D9146_002D63e67e5d568e/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="AuthService_Tests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;NUnit3x::FD609077-89DB-40B2-A781-03BCF2673BE0::.NETCoreApp,Version=v5.0::Kalantyr.Auth.Tests.AuthService_Tests&lt;/TestId&gt;&#xD;
