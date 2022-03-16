@@ -1,6 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+
+[assembly:InternalsVisibleTo("Kalantyr.Auth.Tests")]
 
 namespace Kalantyr.Auth.Services.Impl
 {

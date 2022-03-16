@@ -24,7 +24,7 @@ namespace Kalantyr.Auth
         {
             services.Configure<AuthServiceConfig>(_configuration.GetSection("AuthService"));
 
-            services.AddSingleton<IUserStorage>(new UserStorage());
+            services.AddSingleton<IUserStorage>(sp => new UserStorage(sp.GetService<IOptions<AuthServiceConfig>>()));
             services.AddSingleton<IHashCalculator>(new HashCalculator());
             services.AddSingleton<ITokenStorage>(sp => new TokenStorage());
             services.AddSingleton<IAuthService>(sp => new AuthService(
