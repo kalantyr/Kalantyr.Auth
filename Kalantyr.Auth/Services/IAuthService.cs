@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Kalantyr.Auth.Models;
+using Kalantyr.Web;
 
 namespace Kalantyr.Auth.Services
 {

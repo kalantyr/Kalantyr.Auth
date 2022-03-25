@@ -1,0 +1,3 @@
+[submodule "Kalantyr.Libs"]
+	path = Kalantyr.Libs
+	url = https://github.com/kalantyr/Kalantyr.Libs.git

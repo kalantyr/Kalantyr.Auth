@@ -12,6 +12,9 @@
     &lt;TestId&gt;NUnit3x::FD609077-89DB-40B2-A781-03BCF2673BE0::.NETCoreApp,Version=v5.0::Kalantyr.Auth.Tests.AuthService_Tests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=56fcee3f_002D945a_002D44d8_002Dbea7_002D888ed1b67801/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from &amp;lt;Kalantyr.Auth.Tests&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Project Location="C:\Work\Code\Kalantyr\Kalantyr.Auth\Kalantyr.Auth.Tests" Presentation="&amp;lt;Kalantyr.Auth.Tests&amp;gt;" /&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=7d49a9b3_002D292a_002D4900_002Db70b_002Da88b12093368/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="AuthService_Tests #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Or&gt;&#xD;
     &lt;Or&gt;&#xD;
@@ -26,6 +29,9 @@
       &lt;TestId&gt;NUnit3x::FD609077-89DB-40B2-A781-03BCF2673BE0::.NETCoreApp,Version=v5.0::Kalantyr.Auth.Tests.HashCalculator_Tests&lt;/TestId&gt;&#xD;
     &lt;/TestAncestor&gt;&#xD;
   &lt;/Or&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b4f1da59_002Db414_002D47c0_002D94d7_002D757c8559e3d2/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from Solution" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Solution /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=e0c20076_002Db418_002D47d8_002D9009_002D16c464381b90/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="AuthService_Tests #4" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Or&gt;&#xD;

@@ -3,3 +3,7 @@
 /Kalantyr.Auth.Tests/bin
 /Kalantyr.Auth.Tests/obj
 /.vs
+/Kalantyr.Auth.Client/obj
+/Kalantyr.Auth.Client/bin
+/Kalantyr.Auth.Models/obj
+/Kalantyr.Auth.Models/bin

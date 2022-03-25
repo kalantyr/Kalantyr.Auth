@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Kalantyr.Auth.Models;
 using Kalantyr.Auth.Models.Config;
+using Kalantyr.Web;
 using Microsoft.Extensions.Options;
 
 namespace Kalantyr.Auth.Services.Impl

@@ -1,12 +1,7 @@
-﻿namespace Kalantyr.Auth.Models
+﻿using Kalantyr.Web;
+
+namespace Kalantyr.Auth.Models
 {
-    public class Error
-    {
-        public string Code { get; set; }
-
-        public string Message { get; set; }
-    }
-
     public static class Errors
     {
         public static Error WrongPassword { get; } = new Error
