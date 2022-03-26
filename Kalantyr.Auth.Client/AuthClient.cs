@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,10 +10,13 @@ namespace Kalantyr.Auth.Client
 {
     public class AuthClient: HttpClientBase, IAuthClient
     {
+        private readonly string _appKey;
+
         public TokenInfo TokenInfo { get; private set; }
 
-        public AuthClient(IHttpClientFactory httpClientFactory) : base(httpClientFactory, new TokenRequestEnricher())
+        public AuthClient(IHttpClientFactory httpClientFactory, string appKey = null) : base(httpClientFactory, new RequestEnricher())
         {
+            _appKey = appKey;
         }
 
         public async Task<ResultDto<TokenInfo>> LoginByPasswordAsync(LoginPasswordDto loginPasswordDto, CancellationToken cancellationToken)
@@ -21,7 +25,7 @@ namespace Kalantyr.Auth.Client
             
             TokenInfo = result.Result;
             if (TokenInfo != null)
-                ((TokenRequestEnricher) RequestEnricher).Token = TokenInfo.Value;
+                ((RequestEnricher)base.RequestEnricher).TokenEnricher.Token = TokenInfo.Value;
 
             return result;
         }
@@ -29,6 +33,28 @@ namespace Kalantyr.Auth.Client
         public async Task<ResultDto<bool>> LogoutAsync(CancellationToken cancellationToken)
         {
             return await Post<ResultDto<bool>>("/logout", null, cancellationToken);
+        }
+
+        public async Task<ResultDto<uint>> GetUserIdAsync(string userToken, CancellationToken cancellationToken)
+        {
+            var enricher = (RequestEnricher)base.RequestEnricher;
+            enricher.TokenEnricher.Token = userToken;
+            enricher.AppKeyEnricher.AppKey = _appKey;
+
+            return await Get<ResultDto<uint>>("/user/id", cancellationToken);
+        }
+
+        protected class RequestEnricher: IRequestEnricher
+        {
+            public TokenRequestEnricher TokenEnricher { get; } = new TokenRequestEnricher();
+
+            public AppKeyRequestEnricher AppKeyEnricher { get; } = new AppKeyRequestEnricher();
+
+            public void Enrich(HttpRequestHeaders requestHeaders)
+            {
+                TokenEnricher.Enrich(requestHeaders);
+                AppKeyEnricher.Enrich(requestHeaders);
+            }
         }
     }
 }

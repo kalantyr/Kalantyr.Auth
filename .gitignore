@@ -8,3 +8,4 @@
 /Kalantyr.Auth.Models/obj
 /Kalantyr.Auth.Models/bin
 /Kalantyr.Auth/*.user
+/*.user

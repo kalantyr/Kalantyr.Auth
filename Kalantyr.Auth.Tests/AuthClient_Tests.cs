@@ -26,9 +26,12 @@ namespace Kalantyr.Auth.Tests
                     BaseAddress = new Uri("http://u1628270.plsk.regruhosting.ru/auth")
                 });
 
-            IAuthClient authClient = new AuthClient(_httpClientFactory.Object);
+            IAuthClient authClient = new AuthClient(_httpClientFactory.Object, "asjdFbh67");
             var loginResult = await authClient.LoginByPasswordAsync(new LoginPasswordDto { Login = "user1", Password = "qwerty1" }, cancellationToken);
             Assert.IsFalse(string.IsNullOrWhiteSpace(loginResult.Result.Value));
+
+            var getUserIdResult = await authClient.GetUserIdAsync(loginResult.Result.Value, cancellationToken);
+            Assert.IsNull(getUserIdResult.Error);
 
             var logoutResult = await authClient.LogoutAsync(cancellationToken);
             Assert.IsTrue(logoutResult.Result);

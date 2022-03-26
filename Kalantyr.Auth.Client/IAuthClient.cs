@@ -8,7 +8,9 @@ namespace Kalantyr.Auth.Client
     public interface IAuthClient
     {
         Task<ResultDto<TokenInfo>> LoginByPasswordAsync(LoginPasswordDto loginPasswordDto, CancellationToken cancellationToken);
-        
+
+        Task<ResultDto<uint>> GetUserIdAsync(string userToken, CancellationToken cancellationToken);
+
         Task<ResultDto<bool>> LogoutAsync(CancellationToken cancellationToken);
     }
 }
