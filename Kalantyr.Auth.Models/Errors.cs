@@ -27,6 +27,5 @@ namespace Kalantyr.Auth.Models
             Code = nameof(WrongAppKey),
             Message = "Incorrect application key"
         };
-
     }
 }

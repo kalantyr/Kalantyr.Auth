@@ -17,6 +17,8 @@ namespace Kalantyr.Auth.Tests
         [Test]
         public async Task AuthClient_Test()
         {
+            var cancellationToken = CancellationToken.None;
+
             _httpClientFactory
                 .Setup(hcf => hcf.CreateClient(It.IsAny<string>()))
                 .Returns(new HttpClient
@@ -24,9 +26,12 @@ namespace Kalantyr.Auth.Tests
                     BaseAddress = new Uri("http://u1628270.plsk.regruhosting.ru/auth")
                 });
 
-            var authClient = new AuthClient(_httpClientFactory.Object);
-            var result = await authClient.ByLoginPasswordAsync(new LoginPasswordDto { Login = "user1", Password = "qwerty1" }, CancellationToken.None);
-            Assert.IsNotNull(result);
+            IAuthClient authClient = new AuthClient(_httpClientFactory.Object);
+            var loginResult = await authClient.LoginByPasswordAsync(new LoginPasswordDto { Login = "user1", Password = "qwerty1" }, cancellationToken);
+            Assert.IsFalse(string.IsNullOrWhiteSpace(loginResult.Result.Value));
+
+            var logoutResult = await authClient.LogoutAsync(cancellationToken);
+            Assert.IsTrue(logoutResult.Result);
         }
     }
 }

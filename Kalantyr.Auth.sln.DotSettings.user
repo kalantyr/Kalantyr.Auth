@@ -30,21 +30,14 @@
     &lt;/TestAncestor&gt;&#xD;
   &lt;/Or&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=90f54372_002Dfabd_002D498f_002Dacf4_002D8a0c55938d8d/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="AuthClient_Tests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::FD609077-89DB-40B2-A781-03BCF2673BE0::.NETCoreApp,Version=v5.0::Kalantyr.Auth.Tests.AuthClient_Tests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b4f1da59_002Db414_002D47c0_002D94d7_002D757c8559e3d2/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from Solution" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Solution /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=e0c20076_002Db418_002D47d8_002D9009_002D16c464381b90/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="AuthService_Tests #4" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;Or&gt;&#xD;
-    &lt;Or&gt;&#xD;
-      &lt;TestAncestor&gt;&#xD;
-        &lt;TestId&gt;NUnit3x::FD609077-89DB-40B2-A781-03BCF2673BE0::.NETCoreApp,Version=v5.0::Kalantyr.Auth.Tests.AuthService_Tests&lt;/TestId&gt;&#xD;
-      &lt;/TestAncestor&gt;&#xD;
-      &lt;TestAncestor&gt;&#xD;
-        &lt;TestId&gt;NUnit3x::FD609077-89DB-40B2-A781-03BCF2673BE0::.NETCoreApp,Version=v5.0::Kalantyr.Auth.Tests.TokenStorage_Test&lt;/TestId&gt;&#xD;
-      &lt;/TestAncestor&gt;&#xD;
-    &lt;/Or&gt;&#xD;
-    &lt;TestAncestor&gt;&#xD;
-      &lt;TestId&gt;NUnit3x::FD609077-89DB-40B2-A781-03BCF2673BE0::.NETCoreApp,Version=v5.0::Kalantyr.Auth.Tests.UserStorage_Tests&lt;/TestId&gt;&#xD;
-    &lt;/TestAncestor&gt;&#xD;
-  &lt;/Or&gt;&#xD;
+  &lt;Project Location="C:\Work\Code\Kalantyr\Kalantyr.Auth\Kalantyr.Auth.Tests" Presentation="&amp;lt;Tests&amp;gt;\&amp;lt;Kalantyr.Auth.Tests&amp;gt;" /&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

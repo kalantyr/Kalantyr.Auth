@@ -7,15 +7,28 @@ using Kalantyr.Web;
 
 namespace Kalantyr.Auth.Client
 {
-    public class AuthClient: HttpClientBase
+    public class AuthClient: HttpClientBase, IAuthClient
     {
-        public AuthClient(IHttpClientFactory httpClientFactory) : base(httpClientFactory, null)
+        public TokenInfo TokenInfo { get; private set; }
+
+        public AuthClient(IHttpClientFactory httpClientFactory) : base(httpClientFactory, new TokenRequestEnricher())
         {
         }
 
-        public async Task<ResultDto<TokenInfo>> ByLoginPasswordAsync(LoginPasswordDto loginPasswordDto, CancellationToken cancellationToken)
+        public async Task<ResultDto<TokenInfo>> LoginByPasswordAsync(LoginPasswordDto loginPasswordDto, CancellationToken cancellationToken)
         {
-            return await Post<ResultDto<TokenInfo>>("/login/byLoginPassword", JsonSerializer.Serialize(loginPasswordDto), cancellationToken);
+            var result = await Post<ResultDto<TokenInfo>>("/login/byLoginPassword", JsonSerializer.Serialize(loginPasswordDto), cancellationToken);
+            
+            TokenInfo = result.Result;
+            if (TokenInfo != null)
+                ((TokenRequestEnricher) RequestEnricher).Token = TokenInfo.Value;
+
+            return result;
+        }
+
+        public async Task<ResultDto<bool>> LogoutAsync(CancellationToken cancellationToken)
+        {
+            return await Post<ResultDto<bool>>("/logout", null, cancellationToken);
         }
     }
 }
