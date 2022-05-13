@@ -27,11 +27,15 @@ namespace Kalantyr.Auth
             services.AddSingleton<IUserStorage>(sp => new UserStorage(sp.GetService<IOptions<AuthServiceConfig>>()));
             services.AddSingleton<IHashCalculator>(new HashCalculator());
             services.AddSingleton<ITokenStorage>(sp => new TokenStorage());
+            services.AddSingleton<ILoginValidator, LoginValidator>();
             services.AddSingleton<IAuthService>(sp => new AuthService(
                 sp.GetService<IUserStorage>(),
                 sp.GetService<IHashCalculator>(),
                 sp.GetService<ITokenStorage>(),
-                sp.GetService<IOptions<AuthServiceConfig>>()));
+                sp.GetService<IOptions<AuthServiceConfig>>(),
+                sp.GetService<ILoginValidator>()));
+
+            services.AddSwaggerDocument();
 
             services.AddControllers();
         }
@@ -40,6 +44,9 @@ namespace Kalantyr.Auth
         {
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
+
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
 
             app.UseRouting();
             app.UseEndpoints(routeBuilder => routeBuilder.MapControllers());

@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Kalantyr.Auth.InternalModels;
 using Kalantyr.Auth.Models;
 using Kalantyr.Auth.Models.Config;
 using Kalantyr.Auth.Services.Impl;
@@ -24,17 +25,28 @@ namespace Kalantyr.Auth.Tests
                         new UserRecord
                         {
                             Id = 1,
-                            Login = "user1",
-                            PasswordHash = HashCalculator.GetHashImpl("qwerty1", "11111"),
-                            Salt = "11111"
+                            Login = "user1"
                         },
                         new UserRecord
                         {
                             Id = 2,
-                            Login = "user2",
+                            Login = "user2"
+                        },
+                    },
+                    Passwords = new []
+                    {
+                        new PasswordRecord
+                        {
+                            UserId = 1,
+                            PasswordHash = HashCalculator.GetHashImpl("qwerty1", "11111"),
+                            Salt = "11111"
+                        },
+                        new PasswordRecord
+                        {
+                            UserId = 2,
                             PasswordHash = HashCalculator.GetHashImpl("qwerty2", "22222"),
                             Salt = "22222"
-                        },
+                        }
                     }
                 });
         }
@@ -43,8 +55,8 @@ namespace Kalantyr.Auth.Tests
         public async Task GetUserByLoginAsync_Test()
         {
             var storage = new UserStorage(_config.Object);
-            var result = await storage.GetUserIdByLoginAsync("user1", CancellationToken.None);
-            Assert.IsNotNull(result.Salt);
+            var userId = await storage.GetUserIdByLoginAsync("user1", CancellationToken.None);
+            Assert.IsNotNull(userId);
         }
     }
 }

@@ -11,19 +11,21 @@ namespace Kalantyr.Auth.Services.Impl
 {
     public class AuthService: IAuthService
     {
-        private static readonly ResultDto<TokenInfo> LoginNotFound = new ResultDto<TokenInfo> { Error = Errors.LoginNotFound };
-        private static readonly ResultDto<TokenInfo> WrongPassword = new ResultDto<TokenInfo> { Error = Errors.WrongPassword };
+        private static readonly ResultDto<TokenInfo> LoginNotFound = new() { Error = Errors.LoginNotFound };
+        private static readonly ResultDto<TokenInfo> WrongPassword = new() { Error = Errors.WrongPassword };
 
         private readonly IUserStorageReadonly _userStorage;
         private readonly IHashCalculator _hashCalculator;
         private readonly ITokenStorage _tokenStorage;
+        private readonly ILoginValidator _loginValidator;
         private readonly AuthServiceConfig _config;
 
-        public AuthService(IUserStorageReadonly userStorage, IHashCalculator hashCalculator, ITokenStorage tokenStorage, IOptions<AuthServiceConfig> config)
+        public AuthService(IUserStorageReadonly userStorage, IHashCalculator hashCalculator, ITokenStorage tokenStorage, IOptions<AuthServiceConfig> config, ILoginValidator loginValidator)
         {
             _userStorage = userStorage ?? throw new ArgumentNullException(nameof(userStorage));
             _hashCalculator = hashCalculator ?? throw new ArgumentNullException(nameof(hashCalculator));
             _tokenStorage = tokenStorage ?? throw new ArgumentNullException(nameof(tokenStorage));
+            _loginValidator = loginValidator ?? throw new ArgumentNullException(nameof(loginValidator));
             _config = config.Value;
         }
 
@@ -81,7 +83,6 @@ namespace Kalantyr.Auth.Services.Impl
 
         public async Task<ResultDto<uint>> GetUserIdAsync(string userToken, string appKey, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrEmpty(userToken)) throw new ArgumentNullException(nameof(userToken));
             if (string.IsNullOrEmpty(appKey)) throw new ArgumentNullException(nameof(appKey));
 
             var appConfig = _config.AppKeys
@@ -94,6 +95,24 @@ namespace Kalantyr.Auth.Services.Impl
                 return new ResultDto<uint> { Error = Errors.TokenNotFound };
 
             return new ResultDto<uint> { Result = userId.Value };
+        }
+
+        public async Task<ResultDto<uint>> CreateUserWithPasswordAsync(string token, string login, string password, CancellationToken cancellationToken)
+        {
+            var adminId = await _tokenStorage.GetUserIdByTokenAsync(token, cancellationToken);
+            if (adminId == null)
+                return new ResultDto<uint> { Error = Errors.TokenNotFound };
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (_config.Users.All(u => u.Id != adminId.Value))
+                return new ResultDto<uint> { Error = Errors.AdminOnlyAccess };
+
+            var loginCheckResult = await _loginValidator.ValidateAsync(login, cancellationToken);
+            if (loginCheckResult.Error != null)
+                return new ResultDto<uint> { Error = loginCheckResult.Error };
+
+            throw new NotImplementedException();
         }
 
         private static string GenerateToken()
