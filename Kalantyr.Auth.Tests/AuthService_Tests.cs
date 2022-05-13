@@ -15,7 +15,7 @@ namespace Kalantyr.Auth.Tests
 {
     public class AuthService_Tests
     {
-        private readonly Mock<IUserStorageReadonly> _userStorage = new();
+        private readonly Mock<IUserStorage> _userStorage = new();
         private readonly Mock<IHashCalculator> _hashCalculator = new();
         private readonly Mock<ITokenStorage> _tokenStorage = new();
         private readonly Mock<IOptions<AuthServiceConfig>> _config = new();
@@ -48,7 +48,7 @@ namespace Kalantyr.Auth.Tests
         {
             _userStorage
                 .Setup(us => us.GetUserIdByLoginAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync<IUserStorageReadonly, uint?>(123);
+                .ReturnsAsync(123u);
             _userStorage
                 .Setup(us => us.GetPasswordRecordAsync(It.IsAny<uint>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new PasswordRecord { PasswordHash = "1234567890" });
