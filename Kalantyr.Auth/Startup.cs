@@ -28,12 +28,14 @@ namespace Kalantyr.Auth
             services.AddSingleton<IHashCalculator>(new HashCalculator());
             services.AddSingleton<ITokenStorage>(sp => new TokenStorage());
             services.AddSingleton<ILoginValidator, LoginValidator>();
+            services.AddSingleton<IPasswordValidator, PasswordValidator>();
             services.AddSingleton<IAuthService>(sp => new AuthService(
                 sp.GetService<IUserStorage>(),
                 sp.GetService<IHashCalculator>(),
                 sp.GetService<ITokenStorage>(),
                 sp.GetService<IOptions<AuthServiceConfig>>(),
-                sp.GetService<ILoginValidator>()));
+                sp.GetService<ILoginValidator>(),
+                sp.GetService<IPasswordValidator>()));
 
             services.AddSwaggerDocument();
 

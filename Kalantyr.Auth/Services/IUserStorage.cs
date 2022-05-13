@@ -13,5 +13,8 @@ namespace Kalantyr.Auth.Services
 
     public interface IUserStorage: IUserStorageReadonly
     {
+        Task<uint> CreateAsync(string login, CancellationToken cancellationToken);
+
+        Task SetPasswordAsync(uint userId, PasswordRecord passwordRecord, CancellationToken cancellationToken);
     }
 }

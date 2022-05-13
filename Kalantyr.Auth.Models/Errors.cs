@@ -45,5 +45,11 @@ namespace Kalantyr.Auth.Models
             Code = nameof(LoginExists),
             Message = "Login already exists"
         };
+
+        public static Error WrongPasswordFormat { get; } = new()
+        {
+            Code = nameof(WrongPasswordFormat),
+            Message = "Wrong password format"
+        };
     }
 }

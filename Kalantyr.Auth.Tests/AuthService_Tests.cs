@@ -20,6 +20,7 @@ namespace Kalantyr.Auth.Tests
         private readonly Mock<ITokenStorage> _tokenStorage = new();
         private readonly Mock<IOptions<AuthServiceConfig>> _config = new();
         private readonly Mock<ILoginValidator> _loginValidator = new();
+        private readonly Mock<IPasswordValidator> _passwordValidator = new();
 
         public AuthService_Tests()
         {
@@ -35,7 +36,7 @@ namespace Kalantyr.Auth.Tests
                 .Setup(us => us.GetUserIdByLoginAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(default(uint?));
 
-            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object);
+            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object);
             var data = new LoginPasswordDto();
             var result = await authService.LoginAsync(data, CancellationToken.None);
             Assert.AreEqual(Errors.LoginNotFound.Code, result.Error.Code);
@@ -56,7 +57,7 @@ namespace Kalantyr.Auth.Tests
                 .Setup(hc => hc.GetHash(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(password == "qwerty" ? "1234567890" : "00000");
 
-            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object);
+            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object);
             var data = new LoginPasswordDto();
             var result = await authService.LoginAsync(data, CancellationToken.None);
             Assert.AreEqual(errorCode, result?.Error?.Code);
@@ -81,7 +82,7 @@ namespace Kalantyr.Auth.Tests
                 .Setup(ts => ts.GetByUserIdAsync(It.IsAny<uint>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(tokenInfo);
 
-            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object);
+            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object);
             var data = new LoginPasswordDto();
             var result1 = await authService.LoginAsync(data, CancellationToken.None);
             var result2 = await authService.LoginAsync(data, CancellationToken.None);
@@ -92,7 +93,7 @@ namespace Kalantyr.Auth.Tests
         [Test]
         public async Task Logout_WithoutToken_Test()
         {
-            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object);
+            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object);
             var result = await authService.LogoutAsync(" ", CancellationToken.None);
             Assert.AreEqual(Errors.TokenNotFound.Code, result.Error.Code);
         }
@@ -100,7 +101,7 @@ namespace Kalantyr.Auth.Tests
         [Test]
         public async Task Logout_Test()
         {
-            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object);
+            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object);
             var result = await authService.LogoutAsync("fgjkgjkb", CancellationToken.None);
             Assert.IsTrue(result.Result);
             Assert.IsNull(result.Error);
@@ -120,7 +121,7 @@ namespace Kalantyr.Auth.Tests
                 .Setup(ts => ts.GetUserIdByTokenAsync("777", It.IsAny<CancellationToken>()))
                 .ReturnsAsync(777u);
 
-            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object);
+            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object);
 
             var result = await authService.GetUserIdAsync("fgjkgjkb", "app-666", CancellationToken.None);
             Assert.AreEqual(Errors.WrongAppKey.Code, result.Error.Code);
@@ -159,7 +160,14 @@ namespace Kalantyr.Auth.Tests
                 .Setup(lv => lv.ValidateAsync("trueLogin", It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new ResultDto<bool> { Result = true });
 
-            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object);
+            _passwordValidator
+                .Setup(lv => lv.Validate("111"))
+                .Returns(new ResultDto<bool> { Error = new Error { Code = "Error2" } });
+            _passwordValidator
+                .Setup(lv => lv.Validate("qwerty"))
+                .Returns(ResultDto<bool>.Ok);
+
+            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object);
             var result = await authService.CreateUserWithPasswordAsync("", "newUser", "qwerty", CancellationToken.None);
             Assert.AreEqual(Errors.TokenNotFound.Code, result.Error.Code);
 
@@ -168,6 +176,9 @@ namespace Kalantyr.Auth.Tests
 
             result = await authService.CreateUserWithPasswordAsync("11111", "wrongLogin", "qwerty", CancellationToken.None);
             Assert.AreEqual("Error1", result.Error.Code);
+
+            result = await authService.CreateUserWithPasswordAsync("11111", "trueLogin", "111", CancellationToken.None);
+            Assert.AreEqual("Error2", result.Error.Code);
         }
     }
 }

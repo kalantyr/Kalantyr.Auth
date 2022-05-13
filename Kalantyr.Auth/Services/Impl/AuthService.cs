@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Kalantyr.Auth.InternalModels;
 using Kalantyr.Auth.Models;
 using Kalantyr.Auth.Models.Config;
 using Kalantyr.Web;
@@ -14,18 +15,20 @@ namespace Kalantyr.Auth.Services.Impl
         private static readonly ResultDto<TokenInfo> LoginNotFound = new() { Error = Errors.LoginNotFound };
         private static readonly ResultDto<TokenInfo> WrongPassword = new() { Error = Errors.WrongPassword };
 
-        private readonly IUserStorageReadonly _userStorage;
+        private readonly IUserStorage _userStorage;
         private readonly IHashCalculator _hashCalculator;
         private readonly ITokenStorage _tokenStorage;
         private readonly ILoginValidator _loginValidator;
+        private readonly IPasswordValidator _passwordValidator;
         private readonly AuthServiceConfig _config;
 
-        public AuthService(IUserStorageReadonly userStorage, IHashCalculator hashCalculator, ITokenStorage tokenStorage, IOptions<AuthServiceConfig> config, ILoginValidator loginValidator)
+        public AuthService(IUserStorage userStorage, IHashCalculator hashCalculator, ITokenStorage tokenStorage, IOptions<AuthServiceConfig> config, ILoginValidator loginValidator, IPasswordValidator passwordValidator)
         {
             _userStorage = userStorage ?? throw new ArgumentNullException(nameof(userStorage));
             _hashCalculator = hashCalculator ?? throw new ArgumentNullException(nameof(hashCalculator));
             _tokenStorage = tokenStorage ?? throw new ArgumentNullException(nameof(tokenStorage));
             _loginValidator = loginValidator ?? throw new ArgumentNullException(nameof(loginValidator));
+            _passwordValidator = passwordValidator ?? throw new ArgumentNullException(nameof(passwordValidator));
             _config = config.Value;
         }
 
@@ -112,7 +115,24 @@ namespace Kalantyr.Auth.Services.Impl
             if (loginCheckResult.Error != null)
                 return new ResultDto<uint> { Error = loginCheckResult.Error };
 
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var passwordCheckResult = _passwordValidator.Validate(password);
+            if (passwordCheckResult.Error != null)
+                return new ResultDto<uint> { Error = passwordCheckResult.Error };
+
+            var userId = await _userStorage.CreateAsync(login, cancellationToken);
+
+            var salt = GenerateToken();
+            var passwordRecord = new PasswordRecord
+            {
+                UserId = userId,
+                Salt = salt,
+                PasswordHash = _hashCalculator.GetHash(password, salt)
+            };
+            await _userStorage.SetPasswordAsync(userId, passwordRecord, cancellationToken);
+
+            return new ResultDto<uint> { Result = userId };
         }
 
         private static string GenerateToken()
