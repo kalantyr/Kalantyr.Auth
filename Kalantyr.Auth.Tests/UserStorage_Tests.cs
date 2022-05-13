@@ -43,7 +43,7 @@ namespace Kalantyr.Auth.Tests
         public async Task GetUserByLoginAsync_Test()
         {
             var storage = new UserStorage(_config.Object);
-            var result = await storage.GetUserByLoginAsync("user1", CancellationToken.None);
+            var result = await storage.GetUserIdByLoginAsync("user1", CancellationToken.None);
             Assert.IsNotNull(result.Salt);
         }
     }

@@ -19,8 +19,8 @@ namespace Kalantyr.Auth.Controllers
         }
 
         [HttpPost]
-        [Route("byLoginPassword")]
-        public async Task<IActionResult> ByLoginPasswordAsync([FromBody] LoginPasswordDto dto, CancellationToken cancellationToken)
+        [Route("byPassword")]
+        public async Task<IActionResult> ByPasswordAsync([FromBody] LoginPasswordDto dto, CancellationToken cancellationToken)
         {
             var loginResult = await _authService.LoginAsync(dto, cancellationToken);
             return Ok(loginResult);

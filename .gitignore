@@ -9,3 +9,5 @@
 /Kalantyr.Auth.Models/bin
 /Kalantyr.Auth/*.user
 /*.user
+/Kalantyr.Auth.InternalModels/bin
+/Kalantyr.Auth.InternalModels/obj

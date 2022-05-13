@@ -32,24 +32,30 @@ namespace Kalantyr.Auth.Services.Impl
         {
             if (dto == null) throw new ArgumentNullException(nameof(dto));
 
-            var userRecord = await _userStorage.GetUserByLoginAsync(dto.Login, cancellationToken);
+            var userRecord = await _userStorage.GetUserIdByLoginAsync(dto.Login, cancellationToken);
 
             if (userRecord == null)
                 return LoginNotFound;
 
-            var hash = _hashCalculator.GetHash(dto.Password, userRecord.Salt);
-            if (hash != userRecord.PasswordHash)
+            var userId = userRecord.Value;
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var passwordRecord = await _userStorage.GetPasswordRecordAsync(userId, cancellationToken);
+
+            var hash = _hashCalculator.GetHash(dto.Password, passwordRecord.Salt);
+            if (hash != passwordRecord.PasswordHash)
                 return WrongPassword;
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            var existingToken = await _tokenStorage.GetByUserIdAsync(userRecord.Id, cancellationToken);
+            var existingToken = await _tokenStorage.GetByUserIdAsync(userId, cancellationToken);
             if (existingToken != null)
             {
                 if (existingToken.ExpirationDate > DateTimeOffset.Now.Add(_config.TokenLifetime / 2))
                     return new ResultDto<TokenInfo> { Result = existingToken };
 
-                await _tokenStorage.RemoveByUserIdAsync(userRecord.Id, cancellationToken);
+                await _tokenStorage.RemoveByUserIdAsync(userId, cancellationToken);
             }
 
             var tokenInfo = new TokenInfo
@@ -57,7 +63,7 @@ namespace Kalantyr.Auth.Services.Impl
                 Value = GenerateToken(),
                 ExpirationDate = DateTimeOffset.Now.Add(_config.TokenLifetime)
             };
-            await _tokenStorage.AddAsync(userRecord.Id, tokenInfo, cancellationToken);
+            await _tokenStorage.AddAsync(userId, tokenInfo, cancellationToken);
             return new ResultDto<TokenInfo> { Result = tokenInfo };
         }
 

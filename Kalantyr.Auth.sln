@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.32106.194
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32414.318
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kalantyr.Auth", "Kalantyr.Auth\Kalantyr.Auth.csproj", "{7FB188A7-FA45-4B11-A03D-525851ECE843}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kalantyr.Auth.Tests", "Kalantyr.Auth.Tests\Kalantyr.Auth.Tests.csproj", "{FD609077-89DB-40B2-A781-03BCF2673BE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kalantyr.Auth.Client", "Kalantyr.Auth.Client\Kalantyr.Auth.Client.csproj", "{3E065AD1-DD87-4024-A7B1-041475F7B0DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kalantyr.Auth.Client", "Kalantyr.Auth.Client\Kalantyr.Auth.Client.csproj", "{3E065AD1-DD87-4024-A7B1-041475F7B0DA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{1317D44F-2DB2-4A5F-9AC9-2A61BAF71088}"
 EndProject
@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kalantyr.Web", "Kalantyr.Li
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4EBF106B-DA72-4779-BC2A-9D06AAD47359}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kalantyr.Auth.Models", "Kalantyr.Auth.Models\Kalantyr.Auth.Models.csproj", "{D4BF43F8-B1B0-4EB5-AF79-BA7A30A9BA25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kalantyr.Auth.Models", "Kalantyr.Auth.Models\Kalantyr.Auth.Models.csproj", "{D4BF43F8-B1B0-4EB5-AF79-BA7A30A9BA25}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kalantyr.Auth.InternalModels", "Kalantyr.Auth.InternalModels\Kalantyr.Auth.InternalModels.csproj", "{DDAE69A1-E00F-4641-BE1B-93B9EA2A93E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +45,10 @@ Global
 		{D4BF43F8-B1B0-4EB5-AF79-BA7A30A9BA25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4BF43F8-B1B0-4EB5-AF79-BA7A30A9BA25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4BF43F8-B1B0-4EB5-AF79-BA7A30A9BA25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDAE69A1-E00F-4641-BE1B-93B9EA2A93E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDAE69A1-E00F-4641-BE1B-93B9EA2A93E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDAE69A1-E00F-4641-BE1B-93B9EA2A93E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDAE69A1-E00F-4641-BE1B-93B9EA2A93E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

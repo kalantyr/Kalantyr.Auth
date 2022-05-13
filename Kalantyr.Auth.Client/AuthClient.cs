@@ -21,7 +21,7 @@ namespace Kalantyr.Auth.Client
 
         public async Task<ResultDto<TokenInfo>> LoginByPasswordAsync(LoginPasswordDto loginPasswordDto, CancellationToken cancellationToken)
         {
-            var result = await Post<ResultDto<TokenInfo>>("/login/byLoginPassword", JsonSerializer.Serialize(loginPasswordDto), cancellationToken);
+            var result = await Post<ResultDto<TokenInfo>>("/login/byPassword", JsonSerializer.Serialize(loginPasswordDto), cancellationToken);
             
             TokenInfo = result.Result;
             if (TokenInfo != null)

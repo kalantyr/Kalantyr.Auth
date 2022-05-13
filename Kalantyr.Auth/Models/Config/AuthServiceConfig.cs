@@ -1,4 +1,5 @@
 ﻿using System;
+using Kalantyr.Auth.InternalModels;
 
 namespace Kalantyr.Auth.Models.Config
 {
@@ -7,6 +8,8 @@ namespace Kalantyr.Auth.Models.Config
         public TimeSpan TokenLifetime { get; set; } = TimeSpan.FromHours(1);
 
         public UserRecord[] Users { get; set; } = Array.Empty<UserRecord>();
+
+        public PasswordRecord[] Passwords { get; set; } = Array.Empty<PasswordRecord>();
 
         public AppKeyConfig[] AppKeys { get; set; } = Array.Empty<AppKeyConfig>();
 
