@@ -6,11 +6,12 @@ using Kalantyr.Auth.InternalModels;
 using Kalantyr.Auth.Models;
 using Kalantyr.Auth.Models.Config;
 using Kalantyr.Web;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 
 namespace Kalantyr.Auth.Services.Impl
 {
-    public class AuthService: IAuthService
+    public class AuthService: IAuthService, IHealthCheck
     {
         private static readonly ResultDto<TokenInfo> LoginNotFound = new() { Error = Errors.LoginNotFound };
         private static readonly ResultDto<TokenInfo> WrongPassword = new() { Error = Errors.WrongPassword };
@@ -138,6 +139,25 @@ namespace Kalantyr.Auth.Services.Impl
         private static string GenerateToken()
         {
             return Guid.NewGuid().ToString().Replace("-", string.Empty);
+        }
+
+        public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new CancellationToken())
+        {
+            try
+            {
+                if (_userStorage is IHealthCheck hc)
+                {
+                    var res = await hc.CheckHealthAsync(context, cancellationToken);
+                    if (res.Status != HealthStatus.Healthy)
+                        return res;
+                }
+
+                return HealthCheckResult.Healthy();
+            }
+            catch (Exception e)
+            {
+                return HealthCheckResult.Unhealthy(nameof(AuthService), e);
+            }
         }
     }
 }

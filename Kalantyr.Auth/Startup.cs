@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 
 namespace Kalantyr.Auth
 {
@@ -25,18 +25,14 @@ namespace Kalantyr.Auth
         {
             services.Configure<AuthServiceConfig>(_configuration.GetSection("AuthService"));
 
-            services.AddSingleton<IUserStorage>(sp => new UserStorage(sp.GetService<IOptions<AuthServiceConfig>>()));
-            services.AddSingleton<IHashCalculator>(new HashCalculator());
-            services.AddSingleton<ITokenStorage>(sp => new TokenStorage());
-            services.AddSingleton<ILoginValidator, LoginValidator>();
-            services.AddSingleton<IPasswordValidator, PasswordValidator>();
-            services.AddSingleton<IAuthService>(sp => new AuthService(
-                sp.GetService<IUserStorage>(),
-                sp.GetService<IHashCalculator>(),
-                sp.GetService<ITokenStorage>(),
-                sp.GetService<IOptions<AuthServiceConfig>>(),
-                sp.GetService<ILoginValidator>(),
-                sp.GetService<IPasswordValidator>()));
+            services.AddScoped<IUserStorage, UserStorage>();
+            services.AddScoped<IUserStorageReadonly>(sp => sp.GetService<IUserStorage>());
+            services.AddScoped<IHashCalculator, HashCalculator>();
+            services.AddSingleton<ITokenStorage, TokenStorage>();
+            services.AddScoped<ILoginValidator, LoginValidator>();
+            services.AddScoped<IPasswordValidator, PasswordValidator>();
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IHealthCheck, AuthService>();
 
             services.AddSwaggerDocument();
 
