@@ -11,3 +11,5 @@
 /*.user
 /Kalantyr.Auth.InternalModels/bin
 /Kalantyr.Auth.InternalModels/obj
+/Kalantyr.Auth.DbRepositories/bin
+/Kalantyr.Auth.DbRepositories/obj

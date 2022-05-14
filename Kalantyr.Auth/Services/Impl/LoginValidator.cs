@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Kalantyr.Auth.InternalModels;
 using Kalantyr.Auth.Models;
 using Kalantyr.Web;
 

@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Kalantyr.Auth.InternalModels;
 using Kalantyr.Auth.Models;
-using Kalantyr.Auth.Services;
 using Kalantyr.Auth.Services.Impl;
 using Moq;
 using NUnit.Framework;

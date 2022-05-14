@@ -1,4 +1,5 @@
 using System;
+using Kalantyr.Auth.InternalModels;
 using Kalantyr.Auth.Models.Config;
 using Kalantyr.Auth.Services;
 using Kalantyr.Auth.Services.Impl;

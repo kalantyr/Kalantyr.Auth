@@ -1,0 +1,6 @@
+<Project>
+    <PropertyGroup>
+        <DotNetTargetFramework>net5.0</DotNetTargetFramework>
+        <DotNetLangVersion>9.0</DotNetLangVersion>
+    </PropertyGroup>
+</Project>

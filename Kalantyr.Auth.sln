@@ -17,7 +17,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4EBF106B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kalantyr.Auth.Models", "Kalantyr.Auth.Models\Kalantyr.Auth.Models.csproj", "{D4BF43F8-B1B0-4EB5-AF79-BA7A30A9BA25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kalantyr.Auth.InternalModels", "Kalantyr.Auth.InternalModels\Kalantyr.Auth.InternalModels.csproj", "{DDAE69A1-E00F-4641-BE1B-93B9EA2A93E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kalantyr.Auth.InternalModels", "Kalantyr.Auth.InternalModels\Kalantyr.Auth.InternalModels.csproj", "{DDAE69A1-E00F-4641-BE1B-93B9EA2A93E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kalantyr.Auth.DbRepositories", "Kalantyr.Auth.DbRepositories\Kalantyr.Auth.DbRepositories.csproj", "{884BD9CB-9ABD-4755-BE82-304B32C96720}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +51,10 @@ Global
 		{DDAE69A1-E00F-4641-BE1B-93B9EA2A93E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDAE69A1-E00F-4641-BE1B-93B9EA2A93E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDAE69A1-E00F-4641-BE1B-93B9EA2A93E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{884BD9CB-9ABD-4755-BE82-304B32C96720}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{884BD9CB-9ABD-4755-BE82-304B32C96720}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{884BD9CB-9ABD-4755-BE82-304B32C96720}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{884BD9CB-9ABD-4755-BE82-304B32C96720}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

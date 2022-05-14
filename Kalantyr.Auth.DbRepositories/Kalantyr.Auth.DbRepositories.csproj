@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kalantyr.Libs\Kalantyr.Web\Kalantyr.Web.csproj" />
+    <ProjectReference Include="..\Kalantyr.Auth.InternalModels\Kalantyr.Auth.InternalModels.csproj" />
   </ItemGroup>
 
 </Project>
