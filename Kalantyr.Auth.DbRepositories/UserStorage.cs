@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Kalantyr.Auth.DbRepositories.Entities;
@@ -12,15 +13,38 @@ namespace Kalantyr.Auth.DbRepositories
     public class UserStorage: IUserStorage, IHealthCheck
     {
         private readonly string _connectionString;
+        private static bool _migr;
 
         public UserStorage(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("AuthDB");
+
+            if (!_migr)
+            {
+                _migr = true;
+                MigrateAsync().Wait();
+            }
         }
 
-        public Task<uint?> GetUserIdByLoginAsync(string login, CancellationToken cancellationToken)
+        private async Task MigrateAsync()
         {
-            throw new NotImplementedException();
+            await using var ctx = new AuthDbContext(_connectionString);
+            await ctx.Database.MigrateAsync();
+        }
+
+        public async Task<uint?> GetUserIdByLoginAsync(string login, CancellationToken cancellationToken)
+        {
+            await using var ctx = new AuthDbContext(_connectionString);
+            var records = await ctx.Users
+                .AsNoTracking()
+                .Where(u => EF.Functions.Like(u.Login, "%"+login+"%"))
+                .ToArrayAsync(cancellationToken);
+
+            foreach (var record in records)
+                if (record.Login.Equals(login, StringComparison.InvariantCultureIgnoreCase))
+                    return record.Id;
+
+            return null;
         }
 
         public async Task<PasswordRecord> GetPasswordRecordAsync(uint userId, CancellationToken cancellationToken)
@@ -48,9 +72,21 @@ namespace Kalantyr.Auth.DbRepositories
             return user.Id;
         }
 
-        public Task SetPasswordAsync(uint userId, PasswordRecord passwordRecord, CancellationToken cancellationToken)
+        public async Task SetPasswordAsync(uint userId, PasswordRecord passwordRecord, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await using var ctx = new AuthDbContext(_connectionString);
+            var record = await ctx.Passwords.FirstOrDefaultAsync(p => p.UserId == userId, cancellationToken);
+            if (record == null)
+            {
+                record = new Password { UserId = userId };
+                await ctx.Passwords.AddAsync(record, cancellationToken);
+            }
+            
+            record.PasswordHash = passwordRecord.PasswordHash;
+            record.Salt = passwordRecord.Salt;
+            
+            cancellationToken.ThrowIfCancellationRequested();
+            await ctx.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new())

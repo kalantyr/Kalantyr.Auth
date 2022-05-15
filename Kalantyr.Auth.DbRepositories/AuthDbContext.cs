@@ -8,6 +8,10 @@ namespace Kalantyr.Auth.DbRepositories
     {
         private readonly string _connectionString;
 
+        public AuthDbContext()
+        {
+        }
+
         public AuthDbContext(string connectionString)
         {
             _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
@@ -16,7 +20,13 @@ namespace Kalantyr.Auth.DbRepositories
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
             if (!options.IsConfigured)
-                options.UseSqlServer(_connectionString);
+            {
+                if (string.IsNullOrEmpty(_connectionString))
+                    options.UseSqlServer();
+                else
+                    options.UseSqlServer(_connectionString);
+            }
+
             base.OnConfiguring(options);
         }
 

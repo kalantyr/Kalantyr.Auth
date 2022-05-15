@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 namespace Kalantyr.Auth
 {
@@ -26,7 +27,9 @@ namespace Kalantyr.Auth
         {
             services.Configure<AuthServiceConfig>(_configuration.GetSection("AuthService"));
 
-            services.AddScoped<IUserStorage, UserStorage>();
+            services.AddScoped<IUserStorage>(sp => new CombinedUserStorage(
+                sp.GetService<IOptions<AuthServiceConfig>>(),
+                new UserStorage(_configuration)));
             services.AddScoped<IUserStorageReadonly>(sp => sp.GetService<IUserStorage>());
             services.AddScoped<IHashCalculator, HashCalculator>();
             services.AddSingleton<ITokenStorage, TokenStorage>();
