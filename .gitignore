@@ -13,3 +13,4 @@
 /Kalantyr.Auth.InternalModels/obj
 /Kalantyr.Auth.DbRepositories/bin
 /Kalantyr.Auth.DbRepositories/obj
+/Kalantyr.Auth/Properties/PublishProfiles/*.user
