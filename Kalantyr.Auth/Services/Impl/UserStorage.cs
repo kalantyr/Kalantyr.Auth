@@ -9,11 +9,11 @@ using Microsoft.Extensions.Options;
 
 namespace Kalantyr.Auth.Services.Impl
 {
-    public class UserStorage: IUserStorage
+    public class UserS_torage: IUserStorage
     {
         private readonly AuthServiceConfig _config;
 
-        public UserStorage(IOptions<AuthServiceConfig> config)
+        public UserS_torage(IOptions<AuthServiceConfig> config)
         {
             _config = config.Value;
         }
