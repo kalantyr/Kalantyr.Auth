@@ -51,5 +51,12 @@ namespace Kalantyr.Auth.Models
             Code = nameof(WrongPasswordFormat),
             Message = "Wrong password format"
         };
+
+        public static Error UserIsInactive { get; } = new()
+        {
+            Code = nameof(UserIsInactive),
+            Message = "User is inactive"
+        };
+
     }
 }

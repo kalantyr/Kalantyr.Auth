@@ -5,7 +5,7 @@ namespace Kalantyr.Auth.InternalModels
 {
     public interface IUserStorageReadonly
     {
-        Task<uint?> GetUserIdByLoginAsync(string login, CancellationToken cancellationToken);
+        Task<UserRecord> GetUserIdByLoginAsync(string login, CancellationToken cancellationToken);
 
         Task<PasswordRecord> GetPasswordRecordAsync(uint userId, CancellationToken cancellationToken);
     }

@@ -19,7 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kalantyr.Auth.Models", "Kal
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kalantyr.Auth.InternalModels", "Kalantyr.Auth.InternalModels\Kalantyr.Auth.InternalModels.csproj", "{DDAE69A1-E00F-4641-BE1B-93B9EA2A93E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kalantyr.Auth.DbRepositories", "Kalantyr.Auth.DbRepositories\Kalantyr.Auth.DbRepositories.csproj", "{884BD9CB-9ABD-4755-BE82-304B32C96720}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kalantyr.Auth.DbRepositories", "Kalantyr.Auth.DbRepositories\Kalantyr.Auth.DbRepositories.csproj", "{884BD9CB-9ABD-4755-BE82-304B32C96720}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{00325B99-0B71-47EE-AF09-ADA5801248B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -32,7 +32,7 @@ namespace Kalantyr.Auth.Tests
         {
             _userStorage
                 .Setup(us => us.GetUserIdByLoginAsync("user1", It.IsAny<CancellationToken>()))
-                .ReturnsAsync(123u);
+                .ReturnsAsync(new InternalModels.UserRecord { Id = 123u });
             var validator = new LoginValidator(_userStorage.Object);
             var result = await validator.ValidateAsync(" user1 ", CancellationToken.None);
             Assert.AreEqual(Errors.LoginExists.Code, result.Error.Code);

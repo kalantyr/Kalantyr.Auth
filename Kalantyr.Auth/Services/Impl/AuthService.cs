@@ -43,7 +43,10 @@ namespace Kalantyr.Auth.Services.Impl
             if (userRecord == null)
                 return LoginNotFound;
 
-            var userId = userRecord.Value;
+            if (userRecord.IsDisabled)
+                return new ResultDto<TokenInfo> { Error = Errors.UserIsInactive };
+
+            var userId = userRecord.Id;
 
             cancellationToken.ThrowIfCancellationRequested();
 

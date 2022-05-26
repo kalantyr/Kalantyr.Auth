@@ -32,7 +32,7 @@ namespace Kalantyr.Auth.DbRepositories
             await ctx.Database.MigrateAsync();
         }
 
-        public async Task<uint?> GetUserIdByLoginAsync(string login, CancellationToken cancellationToken)
+        public async Task<UserRecord> GetUserIdByLoginAsync(string login, CancellationToken cancellationToken)
         {
             await using var ctx = new AuthDbContext(_connectionString);
             var records = await ctx.Users
@@ -42,9 +42,19 @@ namespace Kalantyr.Auth.DbRepositories
 
             foreach (var record in records)
                 if (record.Login.Equals(login, StringComparison.InvariantCultureIgnoreCase))
-                    return record.Id;
+                    return Map(record);
 
             return null;
+        }
+
+        private static UserRecord Map(User record)
+        {
+            return new UserRecord
+            {
+                Id = record.Id,
+                IsDisabled = record.IsDisabled,
+                Login = record.Login
+            };
         }
 
         public async Task<PasswordRecord> GetPasswordRecordAsync(uint userId, CancellationToken cancellationToken)

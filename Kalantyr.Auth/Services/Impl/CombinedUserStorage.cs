@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Kalantyr.Auth.InternalModels;
-using Kalantyr.Auth.Models;
 using Kalantyr.Auth.Models.Config;
 using Microsoft.Extensions.Options;
 
@@ -20,14 +19,14 @@ namespace Kalantyr.Auth.Services.Impl
             _config = config.Value;
         }
 
-        public async Task<uint?> GetUserIdByLoginAsync(string login, CancellationToken cancellationToken)
+        public async Task<InternalModels.UserRecord> GetUserIdByLoginAsync(string login, CancellationToken cancellationToken)
         {
             var userRecord = _config.Users
                 .FirstOrDefault(u => u.Login.Equals(login, StringComparison.InvariantCultureIgnoreCase));
 
             return userRecord == null
                 ? await _userStorage.GetUserIdByLoginAsync(login, cancellationToken)
-                : userRecord.Id;
+                : new InternalModels.UserRecord { Id = userRecord.Id, Login = userRecord.Login };
         }
 
         public async Task<PasswordRecord> GetPasswordRecordAsync(uint userId, CancellationToken cancellationToken)

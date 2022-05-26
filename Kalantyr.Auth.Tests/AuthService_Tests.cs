@@ -10,6 +10,7 @@ using Kalantyr.Web;
 using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
+using UserRecord = Kalantyr.Auth.Models.UserRecord;
 
 namespace Kalantyr.Auth.Tests
 {
@@ -34,7 +35,7 @@ namespace Kalantyr.Auth.Tests
         {
             _userStorage
                 .Setup(us => us.GetUserIdByLoginAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(default(uint?));
+                .ReturnsAsync(default(InternalModels.UserRecord));
 
             var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object);
             var data = new LoginPasswordDto();
@@ -48,7 +49,7 @@ namespace Kalantyr.Auth.Tests
         {
             _userStorage
                 .Setup(us => us.GetUserIdByLoginAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(123u);
+                .ReturnsAsync(new InternalModels.UserRecord { Id = 123u });
             _userStorage
                 .Setup(us => us.GetPasswordRecordAsync(It.IsAny<uint>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new PasswordRecord { PasswordHash = "1234567890" });
@@ -72,7 +73,7 @@ namespace Kalantyr.Auth.Tests
 
             _userStorage
                 .Setup(us => us.GetUserIdByLoginAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(123u);
+                .ReturnsAsync(new InternalModels.UserRecord { Id = 123u });
             _userStorage
                 .Setup(us => us.GetPasswordRecordAsync(It.IsAny<uint>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new PasswordRecord { PasswordHash = "12345" });
@@ -140,7 +141,7 @@ namespace Kalantyr.Auth.Tests
                 .Setup(c => c.Value)
                 .Returns(new AuthServiceConfig
                 {
-                    Users = new[]
+                    Users = new []
                     {
                         new UserRecord { Id = 1 }
                     }
@@ -179,6 +180,22 @@ namespace Kalantyr.Auth.Tests
 
             result = await authService.CreateUserWithPasswordAsync("11111", "trueLogin", "111", CancellationToken.None);
             Assert.AreEqual("Error2", result.Error.Code);
+        }
+
+        [Test]
+        public async Task UserDisabled_Test()
+        {
+            _userStorage
+                .Setup(us => us.GetUserIdByLoginAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new InternalModels.UserRecord
+                {
+                    Id = 123u,
+                    IsDisabled = true
+                });
+
+            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object);
+            var result = await authService.LoginAsync(new LoginPasswordDto(), CancellationToken.None);
+            Assert.AreEqual(Errors.UserIsInactive.Code, result.Error.Code);
         }
     }
 }
