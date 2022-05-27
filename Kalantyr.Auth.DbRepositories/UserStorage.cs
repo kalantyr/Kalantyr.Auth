@@ -10,26 +10,20 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Kalantyr.Auth.DbRepositories
 {
-    public class UserStorage: IUserStorage, IHealthCheck
+    public class UserStorage: IUserStorage, IUserStorageAdmin, IHealthCheck
     {
         private readonly string _connectionString;
-        private static bool _migr;
 
         public UserStorage(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("AuthDB");
-
-            if (!_migr)
-            {
-                _migr = true;
-                MigrateAsync().Wait();
-            }
         }
 
-        private async Task MigrateAsync()
+        public async Task MigrateAsync(CancellationToken cancellationToken)
         {
             await using var ctx = new AuthDbContext(_connectionString);
-            await ctx.Database.MigrateAsync();
+            throw new NotImplementedException("Test");
+            await ctx.Database.MigrateAsync(cancellationToken);
         }
 
         public async Task<UserRecord> GetUserIdByLoginAsync(string login, CancellationToken cancellationToken)

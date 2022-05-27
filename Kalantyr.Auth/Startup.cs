@@ -27,6 +27,9 @@ namespace Kalantyr.Auth
         {
             services.Configure<AuthServiceConfig>(_configuration.GetSection("AuthService"));
 
+            services.AddScoped<IUserStorageAdmin, UserStorage>();
+            services.AddScoped<IAdminService, AdminService>();
+
             services.AddScoped<IUserStorage>(sp => new CombinedUserStorage(
                 sp.GetService<IOptions<AuthServiceConfig>>(),
                 new UserStorage(_configuration)));

@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kalantyr.Auth.DbRepositorie
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{00325B99-0B71-47EE-AF09-ADA5801248B8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kalantyr.Auth.AdminTool", "Tools\Kalantyr.Auth.AdminTool\Kalantyr.Auth.AdminTool.csproj", "{F739F7BA-949A-4B19-B785-7D1799676517}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{884BD9CB-9ABD-4755-BE82-304B32C96720}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{884BD9CB-9ABD-4755-BE82-304B32C96720}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{884BD9CB-9ABD-4755-BE82-304B32C96720}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F739F7BA-949A-4B19-B785-7D1799676517}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F739F7BA-949A-4B19-B785-7D1799676517}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F739F7BA-949A-4B19-B785-7D1799676517}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F739F7BA-949A-4B19-B785-7D1799676517}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,6 +70,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{FD609077-89DB-40B2-A781-03BCF2673BE0} = {4EBF106B-DA72-4779-BC2A-9D06AAD47359}
 		{A737CDCF-2A51-4FA5-971F-7224C4EE8175} = {1317D44F-2DB2-4A5F-9AC9-2A61BAF71088}
+		{F739F7BA-949A-4B19-B785-7D1799676517} = {00325B99-0B71-47EE-AF09-ADA5801248B8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F6D6B1D7-686A-449E-89B7-68E83DCD041F}

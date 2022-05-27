@@ -16,4 +16,9 @@ namespace Kalantyr.Auth.InternalModels
 
         Task SetPasswordAsync(uint userId, PasswordRecord passwordRecord, CancellationToken cancellationToken);
     }
+
+    public interface IUserStorageAdmin
+    {
+        Task MigrateAsync(CancellationToken cancellationToken);
+    }
 }

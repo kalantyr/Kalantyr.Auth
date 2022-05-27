@@ -1,0 +1,24 @@
+﻿<Window x:Class="Kalantyr.Auth.AdminTool.Windows.EnvironmentWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Environment" Height="150" Width="600"
+        ShowInTaskbar="False" WindowStartupLocation="CenterOwner">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="DB connection string:"/>
+        <TextBox x:Name="_tbConnectionString" Grid.Column="1"/>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Grid.ColumnSpan="2">
+            <Button Content="OK" IsDefault="True" Click="OnOkClick"/>
+        </StackPanel>
+    </Grid>
+</Window>
