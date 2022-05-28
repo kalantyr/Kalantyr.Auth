@@ -22,7 +22,6 @@ namespace Kalantyr.Auth.DbRepositories
         public async Task MigrateAsync(CancellationToken cancellationToken)
         {
             await using var ctx = new AuthDbContext(_connectionString);
-            throw new NotImplementedException("Test");
             await ctx.Database.MigrateAsync(cancellationToken);
         }
 
