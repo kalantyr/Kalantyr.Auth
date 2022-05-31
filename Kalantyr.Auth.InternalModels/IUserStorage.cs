@@ -8,13 +8,15 @@ namespace Kalantyr.Auth.InternalModels
         Task<UserRecord> GetUserIdByLoginAsync(string login, CancellationToken cancellationToken);
 
         Task<PasswordRecord> GetPasswordRecordAsync(uint userId, CancellationToken cancellationToken);
+
+        Task<UserRecord> GetUserRecordAsync(uint userId, CancellationToken cancellationToken);
     }
 
     public interface IUserStorage : IUserStorageReadonly
     {
         Task<uint> CreateAsync(string login, CancellationToken cancellationToken);
 
-        Task SetPasswordAsync(uint userId, PasswordRecord passwordRecord, CancellationToken cancellationToken);
+        Task SetPasswordAsync(PasswordRecord passwordRecord, CancellationToken cancellationToken);
     }
 
     public interface IUserStorageAdmin

@@ -134,9 +134,48 @@ namespace Kalantyr.Auth.Services.Impl
                 Salt = salt,
                 PasswordHash = _hashCalculator.GetHash(password, salt)
             };
-            await _userStorage.SetPasswordAsync(userId, passwordRecord, cancellationToken);
+            await _userStorage.SetPasswordAsync(passwordRecord, cancellationToken);
 
             return new ResultDto<uint> { Result = userId };
+        }
+
+        public async Task<ResultDto<bool>> SetPasswordAsync(string token, string oldPassword, string newPassword, CancellationToken cancellationToken)
+        {
+            var userId = await _tokenStorage.GetUserIdByTokenAsync(token, cancellationToken);
+            if (userId == null)
+                return new ResultDto<bool> { Error = Errors.TokenNotFound };
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var passwordCheckResult = _passwordValidator.Validate(newPassword);
+            if (passwordCheckResult.Error != null)
+                return new ResultDto<bool> { Error = passwordCheckResult.Error };
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var userRecord = await _userStorage.GetUserRecordAsync(userId.Value, cancellationToken);
+            if (userRecord.IsDisabled)
+                return new ResultDto<bool> { Error = Errors.UserIsInactive };
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var passwordRecord = await _userStorage.GetPasswordRecordAsync(userId.Value, cancellationToken);
+            var oldHash = _hashCalculator.GetHash(oldPassword, passwordRecord.Salt);
+            if (oldHash != passwordRecord.PasswordHash)
+                return new ResultDto<bool> { Error = Errors.WrongPassword };
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var salt = GenerateToken();
+            passwordRecord = new PasswordRecord
+            {
+                UserId = userId.Value,
+                Salt = salt,
+                PasswordHash = _hashCalculator.GetHash(newPassword, salt)
+            };
+            await _userStorage.SetPasswordAsync(passwordRecord, cancellationToken);
+
+            return ResultDto<bool>.Ok;
         }
 
         private static string GenerateToken()

@@ -15,6 +15,13 @@
             <MenuItem Header="Database">
                 <MenuItem Header="Migrate" Click="OnDatabaseMigrateClick"/>
             </MenuItem>
+            <MenuItem Header="User">
+                <MenuItem Header="Login">
+                    <MenuItem Header="With password..." Click="OnLoginWithPasswordClick"/>
+                </MenuItem>
+                <MenuItem Header="Set password..." x:Name="_miUserSetPassword" Click="OnSetPasswordClick"/>
+                <MenuItem Header="Logout" x:Name="_miUserLogout" Click="OnLogoutClick"/>
+            </MenuItem>
         </Menu>
 
     </Grid>

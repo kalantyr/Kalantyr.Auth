@@ -8,7 +8,7 @@ using Kalantyr.Web;
 
 namespace Kalantyr.Auth.Client
 {
-    public class AuthClient: HttpClientBase, IAuthClient
+    public class AuthClient: HttpClientBase, IAuthClient, IAppAuthClient
     {
         private readonly string _appKey;
 
@@ -17,6 +17,11 @@ namespace Kalantyr.Auth.Client
         public AuthClient(IHttpClientFactory httpClientFactory, string appKey = null) : base(httpClientFactory, new RequestEnricher())
         {
             _appKey = appKey;
+        }
+
+        public async Task<ResultDto<uint>> CreateUserWithPasswordAsync(string login, string password, CancellationToken cancellationToken)
+        {
+            return await Post<ResultDto<uint>>("/user/createWithPassword?login=" + login, JsonSerializer.Serialize(password), cancellationToken);
         }
 
         public async Task<ResultDto<TokenInfo>> LoginByPasswordAsync(LoginPasswordDto loginPasswordDto, CancellationToken cancellationToken)
@@ -30,8 +35,18 @@ namespace Kalantyr.Auth.Client
             return result;
         }
 
-        public async Task<ResultDto<bool>> LogoutAsync(CancellationToken cancellationToken)
+        public async Task<ResultDto<bool>> SetPasswordAsync(string userToken, string oldPassword, string newPassword, CancellationToken cancellationToken)
         {
+            var enricher = (RequestEnricher)base.RequestEnricher;
+            enricher.TokenEnricher.Token = userToken;
+            var body = new[] { oldPassword, newPassword };
+            return await Post<ResultDto<bool>>("/user/setPassword", JsonSerializer.Serialize(body), cancellationToken);
+        }
+
+        public async Task<ResultDto<bool>> LogoutAsync(string userToken, CancellationToken cancellationToken)
+        {
+            var enricher = (RequestEnricher)base.RequestEnricher;
+            enricher.TokenEnricher.Token = userToken;
             return await Post<ResultDto<bool>>("/logout", null, cancellationToken);
         }
 
@@ -46,9 +61,9 @@ namespace Kalantyr.Auth.Client
 
         protected class RequestEnricher: IRequestEnricher
         {
-            public TokenRequestEnricher TokenEnricher { get; } = new TokenRequestEnricher();
+            public TokenRequestEnricher TokenEnricher { get; } = new();
 
-            public AppKeyRequestEnricher AppKeyEnricher { get; } = new AppKeyRequestEnricher();
+            public AppKeyRequestEnricher AppKeyEnricher { get; } = new();
 
             public void Enrich(HttpRequestHeaders requestHeaders)
             {

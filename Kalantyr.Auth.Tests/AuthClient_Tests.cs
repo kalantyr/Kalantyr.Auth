@@ -12,7 +12,7 @@ namespace Kalantyr.Auth.Tests
     [Explicit]
     public class AuthClient_Tests
     {
-        private readonly Mock<IHttpClientFactory> _httpClientFactory = new Mock<IHttpClientFactory>();
+        private readonly Mock<IHttpClientFactory> _httpClientFactory = new();
 
         [Test]
         public async Task AuthClient_Test()
@@ -23,17 +23,17 @@ namespace Kalantyr.Auth.Tests
                 .Setup(hcf => hcf.CreateClient(It.IsAny<string>()))
                 .Returns(new HttpClient
                 {
-                    BaseAddress = new Uri("http://u1628270.plsk.regruhosting.ru/auth")
+                    BaseAddress = new Uri("https://localhost:44374")
                 });
 
-            IAuthClient authClient = new AuthClient(_httpClientFactory.Object, "asjdFbh67");
-            var loginResult = await authClient.LoginByPasswordAsync(new LoginPasswordDto { Login = "user1", Password = "qwerty1" }, cancellationToken);
+            var authClient = new AuthClient(_httpClientFactory.Object, "asjdFbh67");
+            var loginResult = await authClient.LoginByPasswordAsync(new LoginPasswordDto { Login = "admin1", Password = "qwerty1" }, cancellationToken);
             Assert.IsFalse(string.IsNullOrWhiteSpace(loginResult.Result.Value));
 
             var getUserIdResult = await authClient.GetUserIdAsync(loginResult.Result.Value, cancellationToken);
             Assert.IsNull(getUserIdResult.Error);
 
-            var logoutResult = await authClient.LogoutAsync(cancellationToken);
+            var logoutResult = await authClient.LogoutAsync(loginResult.Result.Value, cancellationToken);
             Assert.IsTrue(logoutResult.Result);
         }
     }

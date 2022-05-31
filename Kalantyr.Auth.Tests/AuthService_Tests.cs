@@ -197,5 +197,57 @@ namespace Kalantyr.Auth.Tests
             var result = await authService.LoginAsync(new LoginPasswordDto(), CancellationToken.None);
             Assert.AreEqual(Errors.UserIsInactive.Code, result.Error.Code);
         }
+
+        [Test]
+        public async Task SetPassword_Test()
+        {
+            _tokenStorage
+                .Setup(ts => ts.GetUserIdByTokenAsync("1234", It.IsAny<CancellationToken>()))
+                .ReturnsAsync(1234u);
+            _tokenStorage
+                .Setup(ts => ts.GetUserIdByTokenAsync("12345", It.IsAny<CancellationToken>()))
+                .ReturnsAsync(12345u);
+
+            _passwordValidator
+                .Setup(lv => lv.Validate(""))
+                .Returns(new ResultDto<bool> { Error = Errors.WrongPasswordFormat });
+            _passwordValidator
+                .Setup(lv => lv.Validate("qwerty"))
+                .Returns(ResultDto<bool>.Ok);
+
+            _userStorage
+                .Setup(us => us.GetUserRecordAsync(1234, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new InternalModels.UserRecord());
+            _userStorage
+                .Setup(us => us.GetUserRecordAsync(12345, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new InternalModels.UserRecord { IsDisabled = true });
+            _userStorage
+                .Setup(us => us.GetPasswordRecordAsync(1234, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new PasswordRecord { PasswordHash = "111" });
+
+            _hashCalculator
+                .Setup(hc => hc.GetHash("oldPwd", It.IsAny<string>()))
+                .Returns("111");
+            _hashCalculator
+                .Setup(hc => hc.GetHash("wrongOldPwd", It.IsAny<string>()))
+                .Returns("000");
+
+            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object);
+
+            var result = await authService.SetPasswordAsync("54321", "oldPwd", "", CancellationToken.None);
+            Assert.AreEqual(Errors.TokenNotFound.Code, result.Error.Code);
+
+            result = await authService.SetPasswordAsync("12345", "oldPwd", "", CancellationToken.None);
+            Assert.AreEqual(Errors.WrongPasswordFormat.Code, result.Error.Code);
+
+            result = await authService.SetPasswordAsync("12345", "oldPwd", "qwerty", CancellationToken.None);
+            Assert.AreEqual(Errors.UserIsInactive.Code, result.Error.Code);
+
+            result = await authService.SetPasswordAsync("1234", "wrongOldPwd", "qwerty", CancellationToken.None);
+            Assert.AreEqual(Errors.WrongPassword.Code, result.Error.Code);
+
+            result = await authService.SetPasswordAsync("1234", "oldPwd", "qwerty", CancellationToken.None);
+            Assert.IsTrue(result.Result);
+        }
     }
 }

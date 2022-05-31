@@ -66,6 +66,15 @@ namespace Kalantyr.Auth.DbRepositories
             };
         }
 
+        public async Task<UserRecord> GetUserRecordAsync(uint userId, CancellationToken cancellationToken)
+        {
+            await using var ctx = new AuthDbContext(_connectionString);
+            var record = await ctx.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+            return record == null ? null : Map(record);
+        }
+
         public async Task<uint> CreateAsync(string login, CancellationToken cancellationToken)
         {
             var user = new User { Login = login };
@@ -75,13 +84,13 @@ namespace Kalantyr.Auth.DbRepositories
             return user.Id;
         }
 
-        public async Task SetPasswordAsync(uint userId, PasswordRecord passwordRecord, CancellationToken cancellationToken)
+        public async Task SetPasswordAsync(PasswordRecord passwordRecord, CancellationToken cancellationToken)
         {
             await using var ctx = new AuthDbContext(_connectionString);
-            var record = await ctx.Passwords.FirstOrDefaultAsync(p => p.UserId == userId, cancellationToken);
+            var record = await ctx.Passwords.FirstOrDefaultAsync(p => p.UserId == passwordRecord.UserId, cancellationToken);
             if (record == null)
             {
-                record = new Password { UserId = userId };
+                record = new Password { UserId = passwordRecord.UserId };
                 await ctx.Passwords.AddAsync(record, cancellationToken);
             }
             

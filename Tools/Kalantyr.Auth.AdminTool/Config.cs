@@ -12,6 +12,7 @@ namespace Kalantyr.Auth.AdminTool
         {
             new Environment
             {
+                AuthApiUrl = "https://localhost:44374",
                 DbConnectionString = "Data Source=XX.XX.XX.XX;Initial Catalog=XXXXXXXX;User ID=XXXXXXXX;Password=XXXXXX;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
             }
         };

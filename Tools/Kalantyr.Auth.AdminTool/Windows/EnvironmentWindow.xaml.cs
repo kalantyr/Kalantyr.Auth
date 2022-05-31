@@ -16,11 +16,13 @@ namespace Kalantyr.Auth.AdminTool.Windows
         {
             _environment = environment ?? throw new ArgumentNullException(nameof(environment));
             _tbConnectionString.Text = environment.DbConnectionString;
+            _tbUri.Text = environment.AuthApiUrl;
         }
 
         private void OnOkClick(object sender, RoutedEventArgs e)
         {
             _environment.DbConnectionString = _tbConnectionString.Text;
+            _environment.AuthApiUrl = _tbUri.Text;
             DialogResult = true;
         }
     }

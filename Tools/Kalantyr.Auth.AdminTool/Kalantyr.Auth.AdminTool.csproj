@@ -8,8 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Kalantyr.Auth.Client\Kalantyr.Auth.Client.csproj" />
     <ProjectReference Include="..\..\Kalantyr.Auth.DbRepositories\Kalantyr.Auth.DbRepositories.csproj" />
     <ProjectReference Include="..\..\Kalantyr.Auth.InternalModels\Kalantyr.Auth.InternalModels.csproj" />
+    <ProjectReference Include="..\..\Kalantyr.Auth.Models\Kalantyr.Auth.Models.csproj" />
   </ItemGroup>
 
 </Project>

@@ -19,14 +19,14 @@ namespace Kalantyr.Auth.Services.Impl
             _config = config.Value;
         }
 
-        public async Task<InternalModels.UserRecord> GetUserIdByLoginAsync(string login, CancellationToken cancellationToken)
+        public async Task<UserRecord> GetUserIdByLoginAsync(string login, CancellationToken cancellationToken)
         {
             var userRecord = _config.Users
                 .FirstOrDefault(u => u.Login.Equals(login, StringComparison.InvariantCultureIgnoreCase));
 
             return userRecord == null
                 ? await _userStorage.GetUserIdByLoginAsync(login, cancellationToken)
-                : new InternalModels.UserRecord { Id = userRecord.Id, Login = userRecord.Login };
+                : new UserRecord { Id = userRecord.Id, Login = userRecord.Login };
         }
 
         public async Task<PasswordRecord> GetPasswordRecordAsync(uint userId, CancellationToken cancellationToken)
@@ -45,17 +45,27 @@ namespace Kalantyr.Auth.Services.Impl
             };
         }
 
+        public Task<UserRecord> GetUserRecordAsync(uint userId, CancellationToken cancellationToken)
+        {
+            var userRecord = _config.Users
+                .FirstOrDefault(u => u.Id== userId);
+
+            return userRecord != null
+                ? Task.FromResult(new UserRecord { Id = userId, Login = userRecord.Login })
+                : _userStorage.GetUserRecordAsync(userId, cancellationToken);
+        }
+
         public async Task<uint> CreateAsync(string login, CancellationToken cancellationToken)
         {
             return await _userStorage.CreateAsync(login, cancellationToken);
         }
 
-        public async Task SetPasswordAsync(uint userId, PasswordRecord passwordRec, CancellationToken cancellationToken)
+        public async Task SetPasswordAsync(PasswordRecord passwordRec, CancellationToken cancellationToken)
         {
-            var passwordRecord = _config.Passwords.FirstOrDefault(p => p.UserId == userId);
+            var passwordRecord = _config.Passwords.FirstOrDefault(p => p.UserId == passwordRec.UserId);
 
             if (passwordRecord == null)
-                await _userStorage.SetPasswordAsync(userId, passwordRec, cancellationToken);
+                await _userStorage.SetPasswordAsync(passwordRec, cancellationToken);
             else
                 throw new NotSupportedException();
         }

@@ -31,9 +31,17 @@ namespace Kalantyr.Auth.Controllers
 
         [HttpPost]
         [Route("createWithPassword")]
-        public async Task<IActionResult> CreateUserWithPasswordAsync(string login, [FromBody]string password, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateUserWithPasswordAsync(string login, [FromBody] string password, CancellationToken cancellationToken)
         {
             var result = await _authService.CreateUserWithPasswordAsync(Request.GetAuthToken(), login, password, cancellationToken);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("setPassword")]
+        public async Task<IActionResult> SetPasswordAsync([FromBody] string[] passwords, CancellationToken cancellationToken)
+        {
+            var result = await _authService.SetPasswordAsync(Request.GetAuthToken(), passwords[0], passwords[1], cancellationToken);
             return Ok(result);
         }
     }

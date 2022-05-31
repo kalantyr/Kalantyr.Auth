@@ -7,10 +7,12 @@ namespace Kalantyr.Auth.Client
 {
     public interface IAuthClient
     {
+        Task<ResultDto<uint>> CreateUserWithPasswordAsync(string login, string password, CancellationToken cancellationToken);
+
         Task<ResultDto<TokenInfo>> LoginByPasswordAsync(LoginPasswordDto loginPasswordDto, CancellationToken cancellationToken);
 
-        Task<ResultDto<uint>> GetUserIdAsync(string userToken, CancellationToken cancellationToken);
+        Task<ResultDto<bool>> SetPasswordAsync(string userToken, string oldPassword, string newPassword, CancellationToken cancellationToken);
 
-        Task<ResultDto<bool>> LogoutAsync(CancellationToken cancellationToken);
+        Task<ResultDto<bool>> LogoutAsync(string userToken, CancellationToken cancellationToken);
     }
 }
