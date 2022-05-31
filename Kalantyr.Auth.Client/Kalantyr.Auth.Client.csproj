@@ -5,6 +5,10 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>$(Authors)</Authors>
   </PropertyGroup>
+	
+	<PropertyGroup>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	</PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Kalantyr.Auth.Models\Kalantyr.Auth.Models.csproj" />
