@@ -11,7 +11,8 @@ namespace Kalantyr.Auth.AdminTool
 
         public static void ShowError(Exception error)
         {
-            MessageBox.Show(error.Message, error.GetBaseException().GetType().Name, MessageBoxButton.OK, MessageBoxImage.Error);
+            var exception = error.GetBaseException();
+            MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

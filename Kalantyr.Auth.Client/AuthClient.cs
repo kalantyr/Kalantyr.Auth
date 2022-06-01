@@ -8,7 +8,7 @@ using Kalantyr.Web;
 
 namespace Kalantyr.Auth.Client
 {
-    public class AuthClient: HttpClientBase, IAuthClient, IAppAuthClient
+    public class AuthClient: HttpClientBase, IAuthClient, IAppAuthClient, IAdminAuthClient
     {
         private readonly string _appKey;
 
@@ -19,9 +19,18 @@ namespace Kalantyr.Auth.Client
             _appKey = appKey;
         }
 
-        public async Task<ResultDto<uint>> CreateUserWithPasswordAsync(string login, string password, CancellationToken cancellationToken)
+        public async Task<ResultDto<uint>> CreateUserWithPasswordAsync(string userToken, string login, string password, CancellationToken cancellationToken)
         {
+            var enricher = (RequestEnricher)base.RequestEnricher;
+            enricher.TokenEnricher.Token = userToken;
             return await Post<ResultDto<uint>>("/user/createWithPassword?login=" + login, JsonSerializer.Serialize(password), cancellationToken);
+        }
+
+        public async Task<ResultDto<bool>> MigrateAsync(string userToken, CancellationToken cancellationToken)
+        {
+            var enricher = (RequestEnricher)base.RequestEnricher;
+            enricher.TokenEnricher.Token = userToken;
+            return await Post<ResultDto<bool>>("/admin/migrate", null, cancellationToken);
         }
 
         public async Task<ResultDto<TokenInfo>> LoginByPasswordAsync(LoginPasswordDto loginPasswordDto, CancellationToken cancellationToken)

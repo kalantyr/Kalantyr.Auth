@@ -9,15 +9,17 @@ namespace Kalantyr.Auth.AdminTool
     internal class UserActions
     {
         private readonly Environment _environment;
+        private readonly HttpClientFactory _httpClientFactory;
 
         public UserActions(Environment environment)
         {
             _environment = environment ?? throw new ArgumentNullException(nameof(environment));
+            _httpClientFactory = new HttpClientFactory(_environment);
         }
 
         public async Task LoginByPasswordAsync(string login, string password, CancellationToken cancellationToken)
         {
-            IAuthClient client = new AuthClient(new HttpClientFactory(_environment));
+            IAuthClient client = new AuthClient(_httpClientFactory);
             var dto = new LoginPasswordDto { Login = login, Password = password };
             var result = await client.LoginByPasswordAsync(dto, cancellationToken);
             if (result.Error != null)
@@ -27,7 +29,7 @@ namespace Kalantyr.Auth.AdminTool
 
         public async Task LogoutAsync(CancellationToken cancellationToken)
         {
-            IAuthClient client = new AuthClient(new HttpClientFactory(_environment));
+            IAuthClient client = new AuthClient(_httpClientFactory);
             var result = await client.LogoutAsync(App.Tokens[_environment].Value, cancellationToken);
             if (result.Error != null)
                 throw new Exception(result.Error.Message);
@@ -36,7 +38,7 @@ namespace Kalantyr.Auth.AdminTool
 
         public async Task SetPasswordAsync(string oldPassword, string newPAssword, CancellationToken cancellationToken)
         {
-            IAuthClient client = new AuthClient(new HttpClientFactory(_environment));
+            IAuthClient client = new AuthClient(_httpClientFactory);
             var result = await client.SetPasswordAsync(App.Tokens[_environment].Value, oldPassword, newPAssword, cancellationToken);
             if (result.Error != null)
                 throw new Exception(result.Error.Message);

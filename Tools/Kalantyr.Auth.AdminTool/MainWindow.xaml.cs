@@ -17,26 +17,6 @@ namespace Kalantyr.Auth.AdminTool
             TuneControls();
         }
 
-        private async void OnDatabaseMigrateClick(object sender, RoutedEventArgs e)
-        {
-            var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
-
-            try
-            {
-                Cursor = Cursors.Wait;
-                throw new NotImplementedException();
-                MessageBox.Show("Done", "Done", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            catch (Exception error)
-            {
-                App.ShowError(error);
-            }
-            finally
-            {
-                Cursor = null;
-            }
-        }
-
         private void OnEditEnvironmentsClick(object sender, RoutedEventArgs e)
         {
             var window = new EnvironmentWindow(SelectedEnvironment) { Owner = this };
@@ -54,6 +34,7 @@ namespace Kalantyr.Auth.AdminTool
         {
             _miUserLogout.IsEnabled = App.Tokens.ContainsKey(SelectedEnvironment);
             _miUserSetPassword.IsEnabled = _miUserLogout.IsEnabled;
+            _miAdminMigrate.IsEnabled = _miUserLogout.IsEnabled;
         }
 
         private async void OnLogoutClick(object sender, RoutedEventArgs e)
@@ -84,6 +65,30 @@ namespace Kalantyr.Auth.AdminTool
         {
             var window = new SetPasswordWindow(SelectedEnvironment) { Owner = this };
             window.ShowDialog();
+        }
+
+        private async void OnAdminMigrateClick(object sender, RoutedEventArgs e)
+        {
+            var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(60));
+
+            try
+            {
+                Cursor = Cursors.Wait;
+
+                var aa = new AdminActions(SelectedEnvironment);
+                await aa.MigrateAsync(tokenSource.Token);
+
+                TuneControls();
+                MessageBox.Show("Done", string.Empty, MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception exception)
+            {
+                App.ShowError(exception);
+            }
+            finally
+            {
+                Cursor = null;
+            }
         }
     }
 }
