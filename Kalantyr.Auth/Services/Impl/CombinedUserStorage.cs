@@ -4,11 +4,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Kalantyr.Auth.InternalModels;
 using Kalantyr.Auth.Models.Config;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 
 namespace Kalantyr.Auth.Services.Impl
 {
-    public class CombinedUserStorage: IUserStorage
+    public class CombinedUserStorage: IUserStorage, IHealthCheck
     {
         private readonly IUserStorage _userStorage;
         private readonly AuthServiceConfig _config;
@@ -68,6 +69,14 @@ namespace Kalantyr.Auth.Services.Impl
                 await _userStorage.SetPasswordAsync(passwordRec, cancellationToken);
             else
                 throw new NotSupportedException();
+        }
+
+        public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new CancellationToken())
+        {
+            if (_userStorage is IHealthCheck hc)
+                return await hc.CheckHealthAsync(context, cancellationToken);
+
+            return HealthCheckResult.Healthy();
         }
     }
 }
