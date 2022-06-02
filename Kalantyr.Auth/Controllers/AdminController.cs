@@ -24,21 +24,8 @@ namespace Kalantyr.Auth.Controllers
         [ProducesResponseType(typeof(ResultDto<bool>), StatusCodes.Status200OK)]
         public async Task<IActionResult> MigrateAsync(CancellationToken cancellationToken)
         {
-            return await WrapExceptionAsync(
+            return await Utils.WrapExceptionAsync(
                 _adminService.MigrateAsync(Request.GetAuthToken(), cancellationToken));
-        }
-
-        private async Task<ObjectResult> WrapExceptionAsync<T>(Task<T> func)
-        {
-            try
-            {
-                return Ok(await func);
-            }
-            catch (Exception e)
-            {
-                var error = e.GetBaseException();
-                return StatusCode(StatusCodes.Status500InternalServerError, error.GetType().Name + ": " + error.Message);
-            }
         }
     }
 }
