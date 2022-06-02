@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Kalantyr.Auth.Services;
-using Kalantyr.Auth.Utils;
 using Kalantyr.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

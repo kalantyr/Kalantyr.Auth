@@ -12,7 +12,7 @@ namespace Kalantyr.Auth.AdminTool
         {
             new Environment
             {
-                AuthApiUrl = "http://win-qnu9to285o8/auth"
+                AuthApiUrl = "http://WIN-QNU9TO285O8/auth"
             }
         };
     }
