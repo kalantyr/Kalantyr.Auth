@@ -1,3 +1,4 @@
+using Kalantyr.Web;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
@@ -7,7 +8,7 @@ namespace Kalantyr.Auth
     {
         public static void Main(string[] args)
         {
-            Runner.LogIfException(() =>
+            RunWrapper.LogIfException(() =>
             {
                 CreateHostBuilder(args).Build().Run();
             });

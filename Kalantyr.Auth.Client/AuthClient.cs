@@ -1,10 +1,10 @@
 ﻿using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Kalantyr.Auth.Models;
 using Kalantyr.Web;
+using Kalantyr.Web.Impl;
 
 namespace Kalantyr.Auth.Client
 {
@@ -23,7 +23,7 @@ namespace Kalantyr.Auth.Client
         {
             var enricher = (RequestEnricher)base.RequestEnricher;
             enricher.TokenEnricher.Token = userToken;
-            return await Post<ResultDto<uint>>("/user/createWithPassword?login=" + login, JsonSerializer.Serialize(password), cancellationToken);
+            return await Post<ResultDto<uint>>("/user/createWithPassword?login=" + login, Serialize(password), cancellationToken);
         }
 
         public async Task<ResultDto<bool>> MigrateAsync(string userToken, CancellationToken cancellationToken)
@@ -49,7 +49,7 @@ namespace Kalantyr.Auth.Client
             var enricher = (RequestEnricher)base.RequestEnricher;
             enricher.TokenEnricher.Token = userToken;
             var body = new[] { oldPassword, newPassword };
-            return await Post<ResultDto<bool>>("/user/setPassword", JsonSerializer.Serialize(body), cancellationToken);
+            return await Post<ResultDto<bool>>("/user/setPassword", Serialize(body), cancellationToken);
         }
 
         public async Task<ResultDto<bool>> LogoutAsync(string userToken, CancellationToken cancellationToken)
@@ -66,19 +66,6 @@ namespace Kalantyr.Auth.Client
             enricher.AppKeyEnricher.AppKey = _appKey;
 
             return await Get<ResultDto<uint>>("/user/id", cancellationToken);
-        }
-
-        protected class RequestEnricher: IRequestEnricher
-        {
-            public TokenRequestEnricher TokenEnricher { get; } = new();
-
-            public AppKeyRequestEnricher AppKeyEnricher { get; } = new();
-
-            public void Enrich(HttpRequestHeaders requestHeaders)
-            {
-                TokenEnricher.Enrich(requestHeaders);
-                AppKeyEnricher.Enrich(requestHeaders);
-            }
         }
     }
 }
