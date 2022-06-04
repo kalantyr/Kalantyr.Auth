@@ -13,7 +13,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\Kalantyr.Libs\Kalantyr.Web\Kalantyr.Web.csproj" />
 		<ProjectReference Include="..\Kalantyr.Auth.Models\Kalantyr.Auth.Models.csproj" PrivateAssets="All" />
-		<ProjectReference Include="..\Kalantyr.Libs\Kalantyr.Web\Kalantyr.Web.csproj" PrivateAssets="All" />
 	</ItemGroup>
 	<PropertyGroup>
 		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
