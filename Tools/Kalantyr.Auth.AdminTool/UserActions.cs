@@ -36,13 +36,21 @@ namespace Kalantyr.Auth.AdminTool
             App.Tokens.Remove(_environment);
         }
 
-        public async Task SetPasswordAsync(string oldPassword, string newPAssword, CancellationToken cancellationToken)
+        public async Task SetPasswordAsync(string oldPassword, string newPassword, CancellationToken cancellationToken)
         {
             IAuthClient client = new AuthClient(_httpClientFactory);
-            var result = await client.SetPasswordAsync(App.Tokens[_environment].Value, oldPassword, newPAssword, cancellationToken);
+            var result = await client.SetPasswordAsync(App.Tokens[_environment].Value, oldPassword, newPassword, cancellationToken);
             if (result.Error != null)
                 throw new Exception(result.Error.Message);
             App.Tokens.Remove(_environment);
+        }
+
+        public async Task CreateAsync(string userName, string password, CancellationToken cancellationToken)
+        {
+            IAdminAuthClient client = new AuthClient(_httpClientFactory);
+            var result = await client.CreateUserWithPasswordAsync(userName, password, App.Tokens[_environment].Value, cancellationToken);
+            if (result.Error != null)
+                throw new Exception(result.Error.Message);
         }
     }
 }

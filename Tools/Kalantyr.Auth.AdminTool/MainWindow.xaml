@@ -18,6 +18,8 @@
                 </MenuItem>
                 <MenuItem Header="Set password..." x:Name="_miUserSetPassword" Click="OnSetPasswordClick"/>
                 <MenuItem Header="Logout" x:Name="_miUserLogout" Click="OnLogoutClick"/>
+                <Separator/>
+                <MenuItem Header="Create..." Click="OnCreateClick"/>
             </MenuItem>
             <MenuItem Header="Admin">
                 <MenuItem Header="Migrate" x:Name="_miAdminMigrate" Click="OnAdminMigrateClick"/>

@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kalantyr.Auth.Client", "Kal
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{1317D44F-2DB2-4A5F-9AC9-2A61BAF71088}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kalantyr.Web", "Kalantyr.Libs\Kalantyr.Web\Kalantyr.Web.csproj", "{A737CDCF-2A51-4FA5-971F-7224C4EE8175}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4EBF106B-DA72-4779-BC2A-9D06AAD47359}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kalantyr.Auth.Models", "Kalantyr.Auth.Models\Kalantyr.Auth.Models.csproj", "{D4BF43F8-B1B0-4EB5-AF79-BA7A30A9BA25}"
@@ -23,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kalantyr.Auth.DbRepositorie
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{00325B99-0B71-47EE-AF09-ADA5801248B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kalantyr.Auth.AdminTool", "Tools\Kalantyr.Auth.AdminTool\Kalantyr.Auth.AdminTool.csproj", "{F739F7BA-949A-4B19-B785-7D1799676517}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kalantyr.Auth.AdminTool", "Tools\Kalantyr.Auth.AdminTool\Kalantyr.Auth.AdminTool.csproj", "{F739F7BA-949A-4B19-B785-7D1799676517}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kalantyr.Web", "..\Kalantyr.Libs\Kalantyr.Web\Kalantyr.Web.csproj", "{D4C4C80F-2E06-433C-91BD-116E815762C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,10 +43,6 @@ Global
 		{3E065AD1-DD87-4024-A7B1-041475F7B0DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E065AD1-DD87-4024-A7B1-041475F7B0DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E065AD1-DD87-4024-A7B1-041475F7B0DA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A737CDCF-2A51-4FA5-971F-7224C4EE8175}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A737CDCF-2A51-4FA5-971F-7224C4EE8175}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A737CDCF-2A51-4FA5-971F-7224C4EE8175}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A737CDCF-2A51-4FA5-971F-7224C4EE8175}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D4BF43F8-B1B0-4EB5-AF79-BA7A30A9BA25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D4BF43F8-B1B0-4EB5-AF79-BA7A30A9BA25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4BF43F8-B1B0-4EB5-AF79-BA7A30A9BA25}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -63,14 +59,18 @@ Global
 		{F739F7BA-949A-4B19-B785-7D1799676517}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F739F7BA-949A-4B19-B785-7D1799676517}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F739F7BA-949A-4B19-B785-7D1799676517}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4C4C80F-2E06-433C-91BD-116E815762C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4C4C80F-2E06-433C-91BD-116E815762C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4C4C80F-2E06-433C-91BD-116E815762C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4C4C80F-2E06-433C-91BD-116E815762C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{FD609077-89DB-40B2-A781-03BCF2673BE0} = {4EBF106B-DA72-4779-BC2A-9D06AAD47359}
-		{A737CDCF-2A51-4FA5-971F-7224C4EE8175} = {1317D44F-2DB2-4A5F-9AC9-2A61BAF71088}
 		{F739F7BA-949A-4B19-B785-7D1799676517} = {00325B99-0B71-47EE-AF09-ADA5801248B8}
+		{D4C4C80F-2E06-433C-91BD-116E815762C1} = {1317D44F-2DB2-4A5F-9AC9-2A61BAF71088}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F6D6B1D7-686A-449E-89B7-68E83DCD041F}

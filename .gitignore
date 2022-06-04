@@ -16,3 +16,4 @@
 /Kalantyr.Auth/Properties/PublishProfiles/*.user
 /Tools/Kalantyr.Auth.AdminTool/bin
 /Tools/Kalantyr.Auth.AdminTool/obj
+/Tools/Kalantyr.Auth.AdminTool/*.user

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
@@ -14,6 +16,8 @@ namespace Kalantyr.Auth.Client
     {
         private readonly string _appKey;
 
+        private static readonly IDictionary<string, ResultDto<uint>> UserIds = new ConcurrentDictionary<string, ResultDto<uint>>();
+
         public TokenInfo TokenInfo { get; private set; }
 
         public AuthClient(IHttpClientFactory httpClientFactory, string appKey = null) : base(httpClientFactory, new RequestEnricher())
@@ -21,7 +25,8 @@ namespace Kalantyr.Auth.Client
             _appKey = appKey;
         }
 
-        public async Task<ResultDto<uint>> CreateUserWithPasswordAsync(string userToken, string login, string password, CancellationToken cancellationToken)
+        public async Task<ResultDto<uint>> CreateUserWithPasswordAsync(string login, string password, string userToken,
+            CancellationToken cancellationToken)
         {
             var enricher = (RequestEnricher)base.RequestEnricher;
             enricher.TokenEnricher.Token = userToken;
@@ -63,11 +68,18 @@ namespace Kalantyr.Auth.Client
 
         public async Task<ResultDto<uint>> GetUserIdAsync(string userToken, CancellationToken cancellationToken)
         {
-            var enricher = (RequestEnricher)base.RequestEnricher;
+            if (UserIds.TryGetValue(userToken, out var res))
+                return res;
+
+            var enricher = (RequestEnricher)RequestEnricher;
             enricher.TokenEnricher.Token = userToken;
             enricher.AppKeyEnricher.AppKey = _appKey;
+            var result = await Get<ResultDto<uint>>("/user/id", cancellationToken);
 
-            return await Get<ResultDto<uint>>("/user/id", cancellationToken);
+            if (result.Error == null)
+                UserIds.Add(userToken, result);
+
+            return result;
         }
 
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new())

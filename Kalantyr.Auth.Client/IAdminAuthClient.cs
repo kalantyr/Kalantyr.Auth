@@ -6,7 +6,7 @@ namespace Kalantyr.Auth.Client
 {
     public interface IAdminAuthClient
     {
-        Task<ResultDto<uint>> CreateUserWithPasswordAsync(string userToken, string login, string password, CancellationToken cancellationToken);
+        Task<ResultDto<uint>> CreateUserWithPasswordAsync(string login, string password, string userToken, CancellationToken cancellationToken);
 
         Task<ResultDto<bool>> MigrateAsync(string userToken, CancellationToken cancellationToken);
     }

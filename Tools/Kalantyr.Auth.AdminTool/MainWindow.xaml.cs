@@ -90,5 +90,33 @@ namespace Kalantyr.Auth.AdminTool
                 Cursor = null;
             }
         }
+
+        private async void OnCreateClick(object sender, RoutedEventArgs e)
+        {
+            var window = new UserWindow { Owner = this };
+            if (window.ShowDialog() == true)
+            {
+                var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+
+                try
+                {
+                    Cursor = Cursors.Wait;
+
+                    var ua = new UserActions(SelectedEnvironment);
+                    await ua.CreateAsync(window.LoginPassword.Login, window.LoginPassword.Password, tokenSource.Token);
+
+                    TuneControls();
+                    MessageBox.Show("Done", string.Empty, MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                catch (Exception exception)
+                {
+                    App.ShowError(exception);
+                }
+                finally
+                {
+                    Cursor = null;
+                }
+            }
+        }
     }
 }

@@ -11,6 +11,7 @@
 	  <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="6.0.5" />
 	</ItemGroup>
 	<ItemGroup>
+		<ProjectReference Include="..\..\Kalantyr.Libs\Kalantyr.Web\Kalantyr.Web.csproj" />
 		<ProjectReference Include="..\Kalantyr.Auth.Models\Kalantyr.Auth.Models.csproj" PrivateAssets="All" />
 		<ProjectReference Include="..\Kalantyr.Libs\Kalantyr.Web\Kalantyr.Web.csproj" PrivateAssets="All" />
 	</ItemGroup>

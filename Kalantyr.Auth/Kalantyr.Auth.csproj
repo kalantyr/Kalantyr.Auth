@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>$(DotNetTargetFramework)</TargetFramework>
 	<AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
+	<AssemblyVersion>1.0.2.0</AssemblyVersion>
+	<FileVersion>1.0.2.0</FileVersion>
   </PropertyGroup>
 
 	<ItemGroup>
@@ -14,6 +16,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+    <ProjectReference Include="..\..\Kalantyr.Libs\Kalantyr.Web\Kalantyr.Web.csproj" />
     <ProjectReference Include="..\Kalantyr.Auth.DbRepositories\Kalantyr.Auth.DbRepositories.csproj" />
     <ProjectReference Include="..\Kalantyr.Auth.InternalModels\Kalantyr.Auth.InternalModels.csproj" />
     <ProjectReference Include="..\Kalantyr.Auth.Models\Kalantyr.Auth.Models.csproj" />
