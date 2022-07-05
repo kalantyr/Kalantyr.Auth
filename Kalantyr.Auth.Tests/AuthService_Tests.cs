@@ -22,6 +22,7 @@ namespace Kalantyr.Auth.Tests
         private readonly Mock<IOptions<AuthServiceConfig>> _config = new();
         private readonly Mock<ILoginValidator> _loginValidator = new();
         private readonly Mock<IPasswordValidator> _passwordValidator = new();
+        private readonly Mock<IAuthorizationService> _authorizationService = new();
 
         public AuthService_Tests()
         {
@@ -37,7 +38,7 @@ namespace Kalantyr.Auth.Tests
                 .Setup(us => us.GetUserIdByLoginAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(default(InternalModels.UserRecord));
 
-            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object);
+            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object, _authorizationService.Object);
             var data = new LoginPasswordDto();
             var result = await authService.LoginAsync(data, CancellationToken.None);
             Assert.AreEqual(Errors.LoginNotFound.Code, result.Error.Code);
@@ -58,7 +59,7 @@ namespace Kalantyr.Auth.Tests
                 .Setup(hc => hc.GetHash(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(password == "qwerty" ? "1234567890" : "00000");
 
-            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object);
+            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object, _authorizationService.Object);
             var data = new LoginPasswordDto();
             var result = await authService.LoginAsync(data, CancellationToken.None);
             Assert.AreEqual(errorCode, result?.Error?.Code);
@@ -83,7 +84,7 @@ namespace Kalantyr.Auth.Tests
                 .Setup(ts => ts.GetByUserIdAsync(It.IsAny<uint>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(tokenInfo);
 
-            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object);
+            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object, _authorizationService.Object);
             var data = new LoginPasswordDto();
             var result1 = await authService.LoginAsync(data, CancellationToken.None);
             var result2 = await authService.LoginAsync(data, CancellationToken.None);
@@ -94,7 +95,7 @@ namespace Kalantyr.Auth.Tests
         [Test]
         public async Task Logout_WithoutToken_Test()
         {
-            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object);
+            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object, _authorizationService.Object);
             var result = await authService.LogoutAsync(" ", CancellationToken.None);
             Assert.AreEqual(Errors.TokenNotFound.Code, result.Error.Code);
         }
@@ -102,7 +103,7 @@ namespace Kalantyr.Auth.Tests
         [Test]
         public async Task Logout_Test()
         {
-            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object);
+            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object, _authorizationService.Object);
             var result = await authService.LogoutAsync("fgjkgjkb", CancellationToken.None);
             Assert.IsTrue(result.Result);
             Assert.IsNull(result.Error);
@@ -122,7 +123,7 @@ namespace Kalantyr.Auth.Tests
                 .Setup(ts => ts.GetUserIdByTokenAsync("777", It.IsAny<CancellationToken>()))
                 .ReturnsAsync(777u);
 
-            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object);
+            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object, _authorizationService.Object);
 
             var result = await authService.GetUserIdAsync("fgjkgjkb", "app-666", CancellationToken.None);
             Assert.AreEqual(Errors.WrongAppKey.Code, result.Error.Code);
@@ -147,13 +148,6 @@ namespace Kalantyr.Auth.Tests
                     }
                 });
 
-            _tokenStorage
-                .Setup(ts => ts.GetUserIdByTokenAsync("11111", It.IsAny<CancellationToken>()))
-                .ReturnsAsync(1u);
-            _tokenStorage
-                .Setup(ts => ts.GetUserIdByTokenAsync("12345", It.IsAny<CancellationToken>()))
-                .ReturnsAsync(5u);
-
             _loginValidator
                 .Setup(lv => lv.ValidateAsync("wrongLogin", It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new ResultDto<bool> { Error = new Error { Code = "Error1" } });
@@ -168,11 +162,16 @@ namespace Kalantyr.Auth.Tests
                 .Setup(lv => lv.Validate("qwerty"))
                 .Returns(ResultDto<bool>.Ok);
 
-            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object);
-            var result = await authService.CreateUserWithPasswordAsync("", "newUser", "qwerty", CancellationToken.None);
-            Assert.AreEqual(Errors.TokenNotFound.Code, result.Error.Code);
+            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object, _authorizationService.Object);
 
-            result = await authService.CreateUserWithPasswordAsync("12345", "newUser", "qwerty", CancellationToken.None);
+            _authorizationService
+                .Setup(a => a.IsAdminAsync("12345", It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new ResultDto<bool> { Result = false });
+            _authorizationService
+                .Setup(a => a.IsAdminAsync("11111", It.IsAny<CancellationToken>()))
+                .ReturnsAsync(ResultDto<bool>.Ok);
+
+            var result = await authService.CreateUserWithPasswordAsync("12345", "newUser", "qwerty", CancellationToken.None);
             Assert.AreEqual(Errors.AdminOnlyAccess.Code, result.Error.Code);
 
             result = await authService.CreateUserWithPasswordAsync("11111", "wrongLogin", "qwerty", CancellationToken.None);
@@ -193,7 +192,7 @@ namespace Kalantyr.Auth.Tests
                     IsDisabled = true
                 });
 
-            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object);
+            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object, _authorizationService.Object);
             var result = await authService.LoginAsync(new LoginPasswordDto(), CancellationToken.None);
             Assert.AreEqual(Errors.UserIsInactive.Code, result.Error.Code);
         }
@@ -232,7 +231,7 @@ namespace Kalantyr.Auth.Tests
                 .Setup(hc => hc.GetHash("wrongOldPwd", It.IsAny<string>()))
                 .Returns("000");
 
-            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object);
+            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object, _authorizationService.Object);
 
             var result = await authService.SetPasswordAsync("54321", "oldPwd", "", CancellationToken.None);
             Assert.AreEqual(Errors.TokenNotFound.Code, result.Error.Code);

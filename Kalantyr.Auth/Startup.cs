@@ -35,6 +35,7 @@ namespace Kalantyr.Auth
                 new UserStorage(_configuration)));
             services.AddScoped<IUserStorageReadonly>(sp => sp.GetService<IUserStorage>());
             services.AddScoped<IHashCalculator, HashCalculator>();
+            services.AddScoped<IAuthorizationService, AuthorizationService>();
             services.AddSingleton<ITokenStorage, TokenStorage>();
             services.AddScoped<ILoginValidator, LoginValidator>();
             services.AddScoped<IPasswordValidator, PasswordValidator>();

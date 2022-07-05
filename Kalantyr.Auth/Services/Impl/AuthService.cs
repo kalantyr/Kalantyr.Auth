@@ -21,15 +21,17 @@ namespace Kalantyr.Auth.Services.Impl
         private readonly ITokenStorage _tokenStorage;
         private readonly ILoginValidator _loginValidator;
         private readonly IPasswordValidator _passwordValidator;
+        private readonly IAuthorizationService _authorizationService;
         private readonly AuthServiceConfig _config;
 
-        public AuthService(IUserStorage userStorage, IHashCalculator hashCalculator, ITokenStorage tokenStorage, IOptions<AuthServiceConfig> config, ILoginValidator loginValidator, IPasswordValidator passwordValidator)
+        public AuthService(IUserStorage userStorage, IHashCalculator hashCalculator, ITokenStorage tokenStorage, IOptions<AuthServiceConfig> config, ILoginValidator loginValidator, IPasswordValidator passwordValidator, IAuthorizationService authorizationService)
         {
             _userStorage = userStorage ?? throw new ArgumentNullException(nameof(userStorage));
             _hashCalculator = hashCalculator ?? throw new ArgumentNullException(nameof(hashCalculator));
             _tokenStorage = tokenStorage ?? throw new ArgumentNullException(nameof(tokenStorage));
             _loginValidator = loginValidator ?? throw new ArgumentNullException(nameof(loginValidator));
             _passwordValidator = passwordValidator ?? throw new ArgumentNullException(nameof(passwordValidator));
+            _authorizationService = authorizationService ?? throw new ArgumentNullException(nameof(authorizationService));
             _config = config.Value;
         }
 
@@ -106,24 +108,21 @@ namespace Kalantyr.Auth.Services.Impl
 
         public async Task<ResultDto<uint>> CreateUserWithPasswordAsync(string token, string login, string password, CancellationToken cancellationToken)
         {
-            var adminId = await _tokenStorage.GetUserIdByTokenAsync(token, cancellationToken);
-            if (adminId == null)
-                return new ResultDto<uint> { Error = Errors.TokenNotFound };
-
-            cancellationToken.ThrowIfCancellationRequested();
-
-            if (_config.Users.All(u => u.Id != adminId.Value))
+            var isAdminResult = await _authorizationService.IsAdminAsync(token, cancellationToken);
+            if (isAdminResult.Error != null)
+                return ResultDto<uint>.ErrorFrom(isAdminResult);
+            if (!isAdminResult.Result)
                 return new ResultDto<uint> { Error = Errors.AdminOnlyAccess };
 
             var loginCheckResult = await _loginValidator.ValidateAsync(login, cancellationToken);
             if (loginCheckResult.Error != null)
-                return new ResultDto<uint> { Error = loginCheckResult.Error };
+                return ResultDto<uint>.ErrorFrom(loginCheckResult);
 
             cancellationToken.ThrowIfCancellationRequested();
 
             var passwordCheckResult = _passwordValidator.Validate(password);
             if (passwordCheckResult.Error != null)
-                return new ResultDto<uint> { Error = passwordCheckResult.Error };
+                return ResultDto<uint>.ErrorFrom(passwordCheckResult);
 
             var userId = await _userStorage.CreateAsync(login, cancellationToken);
 
@@ -149,7 +148,7 @@ namespace Kalantyr.Auth.Services.Impl
 
             var passwordCheckResult = _passwordValidator.Validate(newPassword);
             if (passwordCheckResult.Error != null)
-                return new ResultDto<bool> { Error = passwordCheckResult.Error };
+                return ResultDto<bool>.ErrorFrom(passwordCheckResult);
 
             cancellationToken.ThrowIfCancellationRequested();
 
