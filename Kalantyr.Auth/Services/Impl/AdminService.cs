@@ -1,45 +1,33 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Kalantyr.Auth.InternalModels;
 using Kalantyr.Auth.Models;
-using Kalantyr.Auth.Models.Config;
 using Kalantyr.Web;
-using Microsoft.Extensions.Options;
 
 namespace Kalantyr.Auth.Services.Impl
 {
     public class AdminService: IAdminService
     {
         private readonly IUserStorageAdmin _userStorage;
-        private readonly ITokenStorage _tokenStorage;
-        private readonly AuthServiceConfig _config;
+        private readonly IAuthorizationService _authorizationService;
 
-        public AdminService(IUserStorageAdmin userStorage, ITokenStorage tokenStorage, IOptions<AuthServiceConfig> config)
+        public AdminService(IUserStorageAdmin userStorage, IAuthorizationService authorizationService)
         {
             _userStorage = userStorage ?? throw new ArgumentNullException(nameof(userStorage));
-            _tokenStorage = tokenStorage ?? throw new ArgumentNullException(nameof(tokenStorage));
-            _config = config.Value;
+            _authorizationService = authorizationService ?? throw new ArgumentNullException(nameof(authorizationService));
         }
 
         public async Task<ResultDto<bool>> MigrateAsync(string token, CancellationToken cancellationToken)
         {
-            #region TODO: выделить проверятор роли
+            var isAdminResult = await _authorizationService.IsAdminAsync(token, cancellationToken);
+            if (isAdminResult.Error != null)
+                return ResultDto<bool>.ErrorFrom(isAdminResult);
 
-            if (string.IsNullOrWhiteSpace(token))
-                return new ResultDto<bool> { Error = Errors.TokenNotFound };
-
-            var adminId = await _tokenStorage.GetUserIdByTokenAsync(token, cancellationToken);
-            if (adminId == null)
-                return new ResultDto<bool> { Error = Errors.TokenNotFound };
-
-            cancellationToken.ThrowIfCancellationRequested();
-
-            if (_config.Users.All(u => u.Id != adminId.Value))
+            if (!isAdminResult.Result)
                 return new ResultDto<bool> { Error = Errors.AdminOnlyAccess };
 
-            #endregion
+            cancellationToken.ThrowIfCancellationRequested();
 
             await _userStorage.MigrateAsync(cancellationToken);
             

@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>$(DotNetTargetFramework)</TargetFramework>
 	<AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
-	<AssemblyVersion>1.0.2.0</AssemblyVersion>
-	<FileVersion>1.0.2.0</FileVersion>
+	<AssemblyVersion>1.0.3.0</AssemblyVersion>
+	<FileVersion>1.0.3.0</FileVersion>
   </PropertyGroup>
 
 	<ItemGroup>

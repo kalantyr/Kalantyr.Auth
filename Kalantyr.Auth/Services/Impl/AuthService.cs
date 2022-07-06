@@ -108,11 +108,14 @@ namespace Kalantyr.Auth.Services.Impl
 
         public async Task<ResultDto<uint>> CreateUserWithPasswordAsync(string token, string login, string password, CancellationToken cancellationToken)
         {
-            var isAdminResult = await _authorizationService.IsAdminAsync(token, cancellationToken);
-            if (isAdminResult.Error != null)
-                return ResultDto<uint>.ErrorFrom(isAdminResult);
-            if (!isAdminResult.Result)
-                return new ResultDto<uint> { Error = Errors.AdminOnlyAccess };
+            if (!_config.SelfCreationOfAccounts)
+            {
+                var isAdminResult = await _authorizationService.IsAdminAsync(token, cancellationToken);
+                if (isAdminResult.Error != null)
+                    return ResultDto<uint>.ErrorFrom(isAdminResult);
+                if (!isAdminResult.Result)
+                    return new ResultDto<uint> { Error = Errors.AdminOnlyAccess };
+            }
 
             var loginCheckResult = await _loginValidator.ValidateAsync(login, cancellationToken);
             if (loginCheckResult.Error != null)

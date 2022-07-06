@@ -19,5 +19,7 @@ namespace Kalantyr.Auth.Models.Config
 
             public string Key { get; set; }
         }
+
+        public bool SelfCreationOfAccounts { get; set; } = false;
     }
 }

@@ -13,6 +13,8 @@ namespace Kalantyr.Auth.Services.Impl
         private readonly ITokenStorage _tokenStorage;
         private readonly AuthServiceConfig _config;
 
+        private static readonly ResultDto<bool> No = new() { Result = false };
+
         public AuthorizationService(ITokenStorage tokenStorage, AuthServiceConfig config)
         {
             _tokenStorage = tokenStorage ?? throw new ArgumentNullException(nameof(tokenStorage));
@@ -21,14 +23,14 @@ namespace Kalantyr.Auth.Services.Impl
 
         public async Task<ResultDto<bool>> IsAdminAsync(string userToken, CancellationToken cancellationToken)
         {
-            var adminId = await _tokenStorage.GetUserIdByTokenAsync(userToken, cancellationToken);
-            if (adminId == null)
+            var userId = await _tokenStorage.GetUserIdByTokenAsync(userToken, cancellationToken);
+            if (userId == null)
                 return new ResultDto<bool> { Error = Errors.TokenNotFound };
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (_config.Users.All(u => u.Id != adminId.Value))
-                return new ResultDto<bool> { Error = Errors.AdminOnlyAccess };
+            if (_config.Users.All(u => u.Id != userId.Value))
+                return No;
 
             return ResultDto<bool>.Ok;
         }

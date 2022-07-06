@@ -182,6 +182,28 @@ namespace Kalantyr.Auth.Tests
         }
 
         [Test]
+        public async Task CreateUserWithPassword_2_Test()
+        {
+            _config
+                .Setup(c => c.Value)
+                .Returns(new AuthServiceConfig
+                {
+                    SelfCreationOfAccounts = true
+                });
+            _loginValidator
+                .Setup(lv => lv.ValidateAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(ResultDto<bool>.Ok);
+            _passwordValidator
+                .Setup(lv => lv.Validate(It.IsAny<string>()))
+                .Returns(ResultDto<bool>.Ok);
+
+            var authService = new AuthService(_userStorage.Object, _hashCalculator.Object, _tokenStorage.Object, _config.Object, _loginValidator.Object, _passwordValidator.Object, _authorizationService.Object);
+
+            var result = await authService.CreateUserWithPasswordAsync("12345", "newUser", "qwerty", CancellationToken.None);
+            Assert.IsNull(result.Error);
+        }
+
+        [Test]
         public async Task UserDisabled_Test()
         {
             _userStorage
