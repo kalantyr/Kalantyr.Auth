@@ -47,8 +47,9 @@ namespace Kalantyr.Auth.AdminTool
 
         public async Task CreateAsync(string userName, string password, CancellationToken cancellationToken)
         {
-            IAdminAuthClient client = new AuthClient(_httpClientFactory);
-            var result = await client.CreateUserWithPasswordAsync(userName, password, App.Tokens[_environment].Value, cancellationToken);
+            IAuthClient client = new AuthClient(_httpClientFactory);
+            var tokenInfo = App.Tokens.ContainsKey(_environment) ? App.Tokens[_environment] : null;
+            var result = await client.CreateUserWithPasswordAsync(userName, password, tokenInfo?.Value, cancellationToken);
             if (result.Error != null)
                 throw new Exception(result.Error.Message);
         }

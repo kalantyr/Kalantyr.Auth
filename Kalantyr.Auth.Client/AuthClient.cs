@@ -25,10 +25,9 @@ namespace Kalantyr.Auth.Client
             _appKey = appKey;
         }
 
-        public async Task<ResultDto<uint>> CreateUserWithPasswordAsync(string login, string password, string userToken,
-            CancellationToken cancellationToken)
+        public async Task<ResultDto<uint>> CreateUserWithPasswordAsync(string login, string password, string userToken, CancellationToken cancellationToken)
         {
-            var enricher = (RequestEnricher)base.RequestEnricher;
+            var enricher = (RequestEnricher)RequestEnricher;
             enricher.TokenEnricher.Token = userToken;
             return await Post<ResultDto<uint>>("/user/createWithPassword?login=" + login, Serialize(password), cancellationToken);
         }

@@ -12,5 +12,7 @@ namespace Kalantyr.Auth.Client
         Task<ResultDto<bool>> SetPasswordAsync(string userToken, string oldPassword, string newPassword, CancellationToken cancellationToken);
 
         Task<ResultDto<bool>> LogoutAsync(string userToken, CancellationToken cancellationToken);
+        
+        Task<ResultDto<uint>> CreateUserWithPasswordAsync(string login, string password, string userToken, CancellationToken cancellationToken);
     }
 }
